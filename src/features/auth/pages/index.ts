@@ -1,0 +1,10 @@
+export { default as Login } from './Login';
+export { default as Logout } from './Logout';
+export { default as Register } from './Register';
+export { default as VerifyEmail } from './VerifyEmail';
+export { default as ForgotPassword } from './ForgotPassword';
+export * from './Login';
+export * from './Logout';
+export * from './Register';
+export * from './ForgotPassword';
+export * from './VerifyEmail';
