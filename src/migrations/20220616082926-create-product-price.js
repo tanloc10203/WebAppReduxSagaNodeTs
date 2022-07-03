@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     }).then(() => {
-      return queryInterface.sequelize.query('ALTER TABLE ProductPrices ADD CONSTRAINT pk_product_price PRIMARY KEY (productId, timeChangeId)');
+      return queryInterface.sequelize.query('ALTER TABLE ONLY "ProductPrices"  ADD CONSTRAINT "ID_PKEY" PRIMARY KEY ("productId" , "timeChangeId");');
     })
 
   },

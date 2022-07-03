@@ -1,14 +1,20 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "nodejsWithTs",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
+    "username": "zmrdwtzmcrdvhy",
+    "password": "7c2f4bacb67e99eb3664c13fb10140babb63ea9ca617954008f6e297ae36cc09",
+    "database": "d804ej3hbsggqe",
+    "host": "ec2-44-198-82-71.compute-1.amazonaws.com",
+    "dialect": "postgres",
     "logging": false,
     "timezone": "+07:00",
     "query": {
       "raw": false
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     }
   },
   "test": {
