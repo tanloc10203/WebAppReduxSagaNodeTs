@@ -103,7 +103,16 @@ export class Category extends CommonController {
 
       if (!_limit && !_page && !_order && !_name && !name_like) {
         const response = await super.handleGetAll();
-        return res.status(200).json({ message: 'GET ALL SUCCEED.', error: false, data: response });
+        return res.status(200).json({
+          message: 'GET ALL SUCCEED.',
+          error: false,
+          data: response,
+          pagination: {
+            _limit: 5,
+            _page: 0,
+            _totalRows: response.length,
+          },
+        });
       }
 
       const filter: FilterPayload = {

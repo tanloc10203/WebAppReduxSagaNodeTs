@@ -7,6 +7,11 @@ import { TimeChange } from './timechange.modle';
 
 export interface ProductPriceAttribute {
   price: number;
+  priceBeforeDiscount?: number;
+  priceMax?: number;
+  priceMaxBeforeDiscount?: number;
+  priceMin?: number;
+  priceMinBeforeDiscount?: number;
   productId: number;
   timeChangeId: number;
   createdAt?: string;
@@ -23,6 +28,11 @@ export class ProductPrice extends Model implements ProductPriceAttribute {
   public price!: number;
   public productId!: number;
   public timeChangeId!: number;
+  public priceBeforeDiscount?: number;
+  public priceMax?: number;
+  public priceMaxBeforeDiscount?: number;
+  public priceMin?: number;
+  public priceMinBeforeDiscount?: number;
 
   public readonly createdAt?: string | undefined;
   public readonly updatedAt?: string | undefined;
@@ -41,6 +51,21 @@ export function initProductPrice(sequelize: Sequelize): void {
   ProductPrice.init(
     {
       price: {
+        type: DataTypes.REAL,
+      },
+      priceBeforeDiscount: {
+        type: DataTypes.REAL,
+      },
+      priceMax: {
+        type: DataTypes.REAL,
+      },
+      priceMaxBeforeDiscount: {
+        type: DataTypes.REAL,
+      },
+      priceMin: {
+        type: DataTypes.REAL,
+      },
+      priceMinBeforeDiscount: {
         type: DataTypes.REAL,
       },
       productId: {

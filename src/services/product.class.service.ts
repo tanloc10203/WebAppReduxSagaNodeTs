@@ -20,8 +20,6 @@ export class Product extends CommonController {
       const categoryId = parseInt(req.body.categoryId);
       const statusPId = parseInt(req.body.statusPId);
 
-      console.log({ name, slug, statusPId, categoryId });
-
       if (!name || !slug || !categoryId || !statusPId)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 

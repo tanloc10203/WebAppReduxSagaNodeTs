@@ -7,6 +7,7 @@ import {
   Optional,
 } from 'sequelize';
 import { Model, ModelCtor } from 'sequelize/types';
+import { db } from '../config/db';
 import { FilterPayload } from '../utils';
 
 export class DbQuery {
@@ -47,6 +48,16 @@ export class DbQuery {
       limit: _limit,
       offset: _limit * _page,
       order: [[`${_name || 'id'}`, `${_order || 'ASC'}`]],
+      include: [
+        {
+          model: db.StatusProduct,
+          as: 'status',
+        },
+        {
+          model: db.Category,
+          as: 'categories',
+        },
+      ],
     });
   }
 

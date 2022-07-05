@@ -82,8 +82,8 @@ export function initProduct(sequelize: Sequelize): void {
 }
 
 export function associateProduct(): void {
-  Product.belongsTo(Category, { as: 'category', targetKey: 'id' });
-  Product.belongsTo(StatusProduct, { as: 'statusP', targetKey: 'id' });
+  Product.belongsTo(Category, { as: 'categories', targetKey: 'id', foreignKey: 'categoryId' });
+  Product.belongsTo(StatusProduct, { as: 'status', targetKey: 'id', foreignKey: 'statusPId' });
   Product.hasMany(ProductPrice, {
     sourceKey: 'id',
     foreignKey: 'id',
