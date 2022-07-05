@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { categoryApi, productApi, productStatusApi } from 'api';
+import { categoryApi, productApi, productStatusApi, GetAllCategoryApi } from 'api';
 import { AxiosError } from 'axios';
 import {
   CategoryAttribute,
@@ -13,7 +13,7 @@ import { all, call, debounce, put, takeLatest } from 'redux-saga/effects';
 import { history } from 'utils';
 import { dashboardActions } from './dashboardSlice';
 
-function* fetchCategory({ payload }: PayloadAction<FilterPayload>) {
+function* fetchCategory({ payload }: PayloadAction<GetAllCategoryApi>) {
   try {
     const response: ListResponse<CategoryAttribute> = yield call(categoryApi.getAll, payload);
 

@@ -2,6 +2,7 @@ import { Box, Card, Link, Stack, Typography } from '@mui/material';
 import { LazyLoadingImg } from 'components/Common';
 import { ProductAttribute } from 'models';
 import { Link as RouterLink } from 'react-router-dom';
+import { fCurrency } from 'utils';
 import { UserMoreMenu } from '../user';
 
 export interface ShopProductCardProps {
@@ -10,7 +11,7 @@ export interface ShopProductCardProps {
 }
 
 export default function ShopProductCard({ product }: ShopProductCardProps) {
-  const { name, thumb, slug } = product;
+  const { name, thumb, slug, status } = product;
 
   return (
     <Card>
@@ -46,10 +47,10 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
           </Typography>
         </Link>
 
-        {/* <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
-          <Typography variant="subtitle1">
-            <Typography
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          {/* <ColorPreview colors={colors} /> */}
+          <Typography variant="subtitle2">
+            {/* <Typography
               component="span"
               variant="body1"
               sx={{
@@ -57,12 +58,12 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
                 textDecoration: 'line-through',
               }}
             >
-              {priceSale && fCurrency(priceSale)}
-            </Typography>
-            &nbsp;
-            {fCurrency(price)}
+              {fCurrency(5000000)}
+            </Typography> */}
+            {/* &nbsp; */}
+            {status && status.key === 'process' ? 'Chưa cập nhật giá' : fCurrency(5000000)}
           </Typography>
-        </Stack> */}
+        </Stack>
       </Stack>
     </Card>
   );

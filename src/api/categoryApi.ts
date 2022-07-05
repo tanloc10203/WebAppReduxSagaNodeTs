@@ -1,6 +1,11 @@
 import { CategoryAttribute, FilterPayload, ListResponse } from 'models';
 import axiosClient from './axiosClient';
 
+export interface GetAllCategoryApi {
+  params: FilterPayload;
+  notPrams?: boolean;
+}
+
 const categoryApi = {
   name: '/category',
 
@@ -8,7 +13,8 @@ const categoryApi = {
     return axiosClient.post(categoryApi.name, data);
   },
 
-  getAll(params: FilterPayload): Promise<ListResponse<CategoryAttribute>> {
+  getAll({ params, notPrams }: GetAllCategoryApi): Promise<ListResponse<CategoryAttribute>> {
+    if (notPrams) return axiosClient.get(categoryApi.name);
     return axiosClient.get(categoryApi.name, { params });
   },
 

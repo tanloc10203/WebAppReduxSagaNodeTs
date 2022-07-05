@@ -1,4 +1,5 @@
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
+import { InputHTMLAttributes } from 'react';
 import { Control, useController } from 'react-hook-form';
 
 export interface SelectOptions {
@@ -6,7 +7,7 @@ export interface SelectOptions {
   label: string;
 }
 
-export interface SelectFieldProps {
+export interface SelectFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   control: Control<any>;
   label?: string;
@@ -14,7 +15,14 @@ export interface SelectFieldProps {
   options: SelectOptions[];
 }
 
-export function SelectField({ name, control, label, options, disabled }: SelectFieldProps) {
+export function SelectField({
+  name,
+  control,
+  label,
+  options,
+  disabled,
+  ...inputProps
+}: SelectFieldProps) {
   const {
     field: { value, onChange, onBlur },
     fieldState: { invalid, error },
@@ -40,6 +48,7 @@ export function SelectField({ name, control, label, options, disabled }: SelectF
         onChange={onChange}
         onBlur={onBlur}
         label={label}
+        inputProps={inputProps}
       >
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>

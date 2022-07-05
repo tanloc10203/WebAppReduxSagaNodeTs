@@ -1,4 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GetAllCategoryApi } from 'api';
 import { RootState } from 'app/store';
 import {
   CategoryAttribute,
@@ -89,13 +90,13 @@ const dashboardSlice = createSlice({
     },
 
     // * FETCH CATEGORY
-    fetchCategoryStart(state, action: PayloadAction<FilterPayload>) {
+    fetchCategoryStart(state, action: PayloadAction<GetAllCategoryApi>) {
       state.category.isFetching = true;
     },
     fetchCategorySucceed(state, action: PayloadAction<ListResponse<CategoryAttribute>>) {
       state.category.data = action.payload.data as Array<CategoryAttribute>;
       state.category.isFetching = false;
-      state.category.pagination = action.payload.pagination;
+      state.category.pagination = action.payload?.pagination;
     },
     fetchCategoryFailed(state, action: PayloadAction<string>) {
       state.category.data = [];

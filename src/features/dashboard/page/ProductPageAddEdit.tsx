@@ -1,11 +1,11 @@
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 import { useAppDispatch } from 'app/hooks';
 import { FormLayout } from 'components/FormFields';
-import { ProductAttribute } from 'models';
+import { FilterPayload, ProductAttribute } from 'models';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ProductAddEditForm } from '../components/forms';
 import { dashboardActions } from '../dashboardSlice';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 
 export default function ProductPageAddEdit() {
   const { productId } = useParams();
@@ -15,7 +15,9 @@ export default function ProductPageAddEdit() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    const filters: FilterPayload = {} as FilterPayload;
     dispatch(dashboardActions.fetchProductStatusStart());
+    dispatch(dashboardActions.fetchCategoryStart({ params: filters, notPrams: true }));
   }, [dispatch]);
 
   const initialValues: ProductAttribute = {

@@ -15,7 +15,7 @@ export default function Category() {
     const newFilters: FilterPayload = {
       ...(filters as FilterPayload),
     };
-    dispatch(dashboardActions.fetchCategoryStart(newFilters));
+    dispatch(dashboardActions.fetchCategoryStart({ params: newFilters }));
   }, [dispatch, filters]);
 
   return (
