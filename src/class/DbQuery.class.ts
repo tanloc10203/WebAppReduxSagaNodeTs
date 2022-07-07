@@ -3,6 +3,7 @@ import {
   CreationAttributes,
   FindOptions,
   FindOrCreateOptions,
+  Includeable,
   Op,
   Optional,
 } from 'sequelize';
@@ -48,16 +49,26 @@ export class DbQuery {
       limit: _limit,
       offset: _limit * _page,
       order: [[`${_name || 'id'}`, `${_order || 'ASC'}`]],
-      include: [
-        {
-          model: db.StatusProduct,
-          as: 'status',
+    });
+  }
+
+  public handleGetAllAndFilterByIncludes(
+    filter: FilterPayload,
+    includes?: Includeable | Array<Includeable>
+  ) {
+    let { _limit, _page, _order, _name, name_like, ...others } = filter;
+
+    return this.Db.findAndCountAll({
+      where: {
+        ...others,
+        name: {
+          [Op.like]: `%${name_like || ''}%`,
         },
-        {
-          model: db.Category,
-          as: 'categories',
-        },
-      ],
+      },
+      limit: _limit,
+      offset: _limit * _page,
+      order: [[`${_name || 'id'}`, `${_order || 'ASC'}`]],
+      include: includes,
     });
   }
 
