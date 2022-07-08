@@ -43,7 +43,7 @@ export class DbQuery {
     return this.Db.findAndCountAll({
       where: {
         ...others,
-        [`${_name}`]: {
+        name: {
           [Op.like]: `%${name_like || ''}%`,
         },
       },
