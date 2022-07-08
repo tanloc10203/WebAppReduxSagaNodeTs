@@ -3,6 +3,7 @@ import { Model, ModelCtor } from 'sequelize/types';
 import { CommonController } from '../class';
 import { db } from '../config/db';
 import log from '../logger';
+import { ProductAttribute } from '../models/product.model';
 import { StatusProductAttribute } from '../models/statusproduct.model';
 import { FilterPayload } from '../utils';
 
@@ -83,6 +84,7 @@ export class Product extends CommonController {
 
       if (!_limit && !_page && !_order && !_name && !name_like) {
         const response = await super.handleGetAll();
+
         return res.status(200).json({
           message: 'GET ALL SUCCEED.',
           error: false,
@@ -108,10 +110,23 @@ export class Product extends CommonController {
         {
           model: db.Category,
           as: 'categories',
+          attributes: {
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          },
         },
         {
           model: db.StatusProduct,
           as: 'status',
+          attributes: {
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          },
+        },
+        {
+          model: db.ProductPrice,
+          as: 'price',
+          attributes: {
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          },
         },
       ]);
 

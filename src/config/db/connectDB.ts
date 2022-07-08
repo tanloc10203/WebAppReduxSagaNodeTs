@@ -52,6 +52,7 @@ export const db = {
   StatusProduct: sequelize.models.StatusProduct,
   Product: sequelize.models.Product,
   ProductPrice: sequelize.models.ProductPrice,
+  TimeChange: sequelize.models.TimeChange,
 };
 
 export const connectDB = async () => {

@@ -17,6 +17,8 @@ export interface ProductAttribute {
   slug?: string;
   createdAt?: string;
   updatedAt?: string;
+
+  [key: string]: any;
 }
 
 export class Product extends Model implements ProductAttribute {
@@ -66,11 +68,15 @@ export function initProduct(sequelize: Sequelize): void {
       description: DataTypes.TEXT,
       categoryId: {
         type: DataTypes.INTEGER,
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
         allowNull: false,
       },
       statusPId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
     },
     {
@@ -84,9 +90,9 @@ export function initProduct(sequelize: Sequelize): void {
 export function associateProduct(): void {
   Product.belongsTo(Category, { as: 'categories', targetKey: 'id', foreignKey: 'categoryId' });
   Product.belongsTo(StatusProduct, { as: 'status', targetKey: 'id', foreignKey: 'statusPId' });
-  Product.hasMany(ProductPrice, {
+  Product.hasOne(ProductPrice, {
     sourceKey: 'id',
-    foreignKey: 'id',
-    // as: 'products',
+    foreignKey: 'productId',
+    as: 'price',
   });
 }

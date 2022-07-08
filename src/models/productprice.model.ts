@@ -6,6 +6,7 @@ import { Product } from './product.model';
 import { TimeChange } from './timechange.modle';
 
 export interface ProductPriceAttribute {
+  id?: number;
   price: number;
   priceBeforeDiscount?: number;
   priceMax?: number;
@@ -25,6 +26,7 @@ export class ProductPrice extends Model implements ProductPriceAttribute {
    * The `models/index` file will call this method automatically.
    */
 
+  public id?: number;
   public price!: number;
   public productId!: number;
   public timeChangeId!: number;
@@ -38,7 +40,7 @@ export class ProductPrice extends Model implements ProductPriceAttribute {
   public readonly updatedAt?: string | undefined;
 
   public readonly product?: Product[];
-  public readonly timeChange?: TimeChange[];
+  public readonly timeChange?: TimeChange;
 
   public static associations: {
     // define association here
@@ -50,6 +52,12 @@ export class ProductPrice extends Model implements ProductPriceAttribute {
 export function initProductPrice(sequelize: Sequelize): void {
   ProductPrice.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
       price: {
         type: DataTypes.REAL,
       },
@@ -70,23 +78,31 @@ export function initProductPrice(sequelize: Sequelize): void {
       },
       productId: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         allowNull: false,
+        primaryKey: true,
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
       timeChangeId: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         allowNull: false,
+        primaryKey: true,
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       },
     },
     {
       sequelize,
       modelName: 'ProductPrice',
     }
-  ).removeAttribute('id');
+  );
 }
 
 export function associateProductPrice(): void {
-  ProductPrice.belongsTo(Product, { targetKey: 'id' });
-  ProductPrice.belongsTo(TimeChange, { targetKey: 'id' });
+  ProductPrice.belongsTo(Product, { targetKey: 'id', foreignKey: 'productId', as: 'products' });
+  ProductPrice.belongsTo(TimeChange, {
+    targetKey: 'id',
+    foreignKey: 'timeChangeId',
+    as: 'timeChange',
+  });
 }

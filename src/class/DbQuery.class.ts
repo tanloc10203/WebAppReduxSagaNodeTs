@@ -8,7 +8,6 @@ import {
   Optional,
 } from 'sequelize';
 import { Model, ModelCtor } from 'sequelize/types';
-import { db } from '../config/db';
 import { FilterPayload } from '../utils';
 
 export class DbQuery {
@@ -28,8 +27,10 @@ export class DbQuery {
     return this.Db.findOne(options);
   }
 
-  public handleCreate<T>(data: T) {
-    return this.Db.create({ ...(data as Optional<any, string>) });
+  public handleCreate<T>(data: T, options?: FindOptions<Attributes<Model>>) {
+    return this.Db.create({
+      ...(data as Optional<any, string>),
+    });
   }
 
   public handleGetAll() {

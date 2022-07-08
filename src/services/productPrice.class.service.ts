@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
-import { Model, ModelCtor } from 'sequelize/types';
+import { FindAttributeOptions, Model, ModelCtor } from 'sequelize/types';
 import { CommonController } from '../class';
+import { db } from '../config/db';
 import log from '../logger';
+import { ProductPriceAttribute } from '../models/productprice.model';
 import { StatusProductAttribute } from '../models/statusproduct.model';
+import { TimeChangeAttribute } from '../models/timechange.modle';
 
 export class ProductPrice extends CommonController {
   constructor(Db: ModelCtor<Model<any, any>>) {
@@ -15,20 +18,32 @@ export class ProductPrice extends CommonController {
     res: Response
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
-      const { name, key } = req.body;
+      const { price, productId } = req.body;
 
-      if (!name || !key)
+      if (!price || !productId)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 
-      const [response, created] = await super.handleFindAndCreate({
-        where: { name: name, key: key },
-        defaults: { name: name, key: key },
+      const response = await super.handleFind({
+        where: { productId },
         raw: true,
       });
 
-      if (!created) return res.status(400).json({ message: 'Row is exist !', error: true });
+      if (response) return res.status(404).json({ message: 'Price was exist !!!', error: true });
 
-      res.status(200).json({ message: 'Create row succeed.', error: false, data: response });
+      const timeChange: TimeChangeAttribute = (
+        await db.TimeChange.create({
+          time: new Date(),
+        })
+      ).get();
+
+      const newResponse = await super.handleCreate<ProductPriceAttribute>({
+        ...req.body,
+        price,
+        productId: productId,
+        timeChangeId: timeChange.id as number,
+      });
+
+      res.status(200).json({ message: 'Create row succeed.', error: false, data: newResponse });
     } catch (error) {
       log.error(error);
       if (error instanceof Error)

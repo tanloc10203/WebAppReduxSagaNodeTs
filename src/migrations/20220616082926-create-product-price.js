@@ -2,6 +2,11 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('ProductPrices', {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+      },
       price: {
         type: Sequelize.REAL
       },
@@ -33,9 +38,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => {
-      return queryInterface.sequelize.query('ALTER TABLE ONLY "ProductPrices"  ADD CONSTRAINT "ID_PKEY" PRIMARY KEY ("productId" , "timeChangeId");');
     })
+      .then(() => {
+        return queryInterface.sequelize.query('ALTER TABLE ONLY "ProductPrices"  ADD CONSTRAINT "ID_P_KEY" PRIMARY KEY ("productId" , "timeChangeId", "id");');
+      })
 
   },
   async down(queryInterface, Sequelize) {
