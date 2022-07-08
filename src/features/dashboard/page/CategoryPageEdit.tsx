@@ -10,9 +10,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { dashboardActions } from '../dashboardSlice';
 
-export interface CategoryPageEditProps {}
-
-export default function CategoryPageEdit(props: CategoryPageEditProps) {
+export default function CategoryPageEdit() {
   const { categoryId } = useParams();
 
   const dispatch = useAppDispatch();

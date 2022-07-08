@@ -1,19 +1,23 @@
-import { FilterPayload, ProductAttribute } from 'models';
+import { FilterPayload, ListResponse, ProductAttribute } from 'models';
 import axiosClient from './axiosClient';
 
 const productApi = {
   name: '/product',
 
-  create(data: ProductAttribute) {
+  create(data: ProductAttribute): Promise<ListResponse<ProductAttribute>> {
     return axiosClient.post(productApi.name, data);
   },
 
-  update(data: ProductAttribute) {
+  update(data: ProductAttribute): Promise<ListResponse<ProductAttribute>> {
     return axiosClient.patch(productApi.name + '/' + data.id, data);
   },
 
-  getAll(params: FilterPayload) {
+  getAll(params: FilterPayload): Promise<ListResponse<ProductAttribute>> {
     return axiosClient.get(productApi.name, { params });
+  },
+
+  getById(id: number): Promise<ListResponse<ProductAttribute>> {
+    return axiosClient.get(`${productApi.name}/${id}`);
   },
 };
 

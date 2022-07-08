@@ -4,7 +4,7 @@ import numeral from 'numeral';
 // ----------------------------------------------------------------------
 
 export function fCurrency(number: number) {
-  return numeral(number).format(Number.isInteger(number) ? '$0,0' : '$0,0.00');
+  return numeral(number).format(Number.isInteger(number) ? '0,0VNĐ' : '0,0.00VNĐ');
 }
 
 export function fPercent(number: number) {

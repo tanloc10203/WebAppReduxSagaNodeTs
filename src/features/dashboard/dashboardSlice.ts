@@ -54,11 +54,11 @@ const initialState: DashboardSliceState = {
     isFetching: false,
     data: [],
     filters: {
-      _limit: 1,
+      _limit: 5,
       _page: 1,
     },
     pagination: {
-      _limit: 1,
+      _limit: 5,
       _page: 1,
       _totalRows: 15,
     },

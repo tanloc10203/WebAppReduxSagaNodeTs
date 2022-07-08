@@ -16,7 +16,7 @@ export interface CategoryAddFormProps {
 
 const schemaCategoryAdd = yup
   .object({
-    name: yup.string().required().min(5),
+    name: yup.string().required(),
   })
   .required();
 

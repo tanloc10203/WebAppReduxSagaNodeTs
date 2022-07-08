@@ -119,6 +119,7 @@ function* fetchCategoryEdit({ payload }: PayloadAction<CategoryAttribute>) {
       const filter: FilterPayload = {
         _limit: 5,
         _page: 0,
+        level: 1,
       };
       yield put(dashboardActions.setFilterCategory(filter));
       yield put(dashboardActions.fetchCategoryEditSucceed());

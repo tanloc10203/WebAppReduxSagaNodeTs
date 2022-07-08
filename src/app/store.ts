@@ -1,6 +1,7 @@
 import createSagaMiddleware from '@redux-saga/core';
 import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import dashboardReducer from 'features/dashboard/dashboardSlice';
+import productPriceReducer from 'features/productPrice/productPriceSlice';
 import authReducer from '../features/auth/authSlice';
 import memberReducer from '../features/Members/memberSlice';
 import rootSaga from './rootSaga';
@@ -11,6 +12,7 @@ const rootReducers = combineReducers({
   auth: authReducer,
   member: memberReducer,
   dashboard: dashboardReducer,
+  productPrice: productPriceReducer,
 });
 
 export const store = configureStore({
