@@ -1,5 +1,7 @@
 export const introServer = {
-  SERVER_NAME: 'SERVER API ',
+  SERVER_NAME: 'SERVER API OF END COOL',
+  COPY_RIGHT: 'BY END COOL',
+  EMAIL_CONTACT: 'ginga550504@gmail.com',
   SERVER_MESSAGE: 'SERVER ON RUNNING',
   SERVER_HOST: process.env.DOMAIN + 'api',
   '[SERVER_API]': {
