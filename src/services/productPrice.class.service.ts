@@ -43,6 +43,8 @@ export class ProductPrice extends CommonController {
         timeChangeId: timeChange.id as number,
       });
 
+      await db.Product.update({ statusPId: 2 }, { where: { id: productId } });
+
       res.status(200).json({ message: 'Create row succeed.', error: false, data: newResponse });
     } catch (error) {
       log.error(error);
