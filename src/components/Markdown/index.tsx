@@ -3,10 +3,8 @@ import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { FileLoader, UploadAdapter } from '@ckeditor/ckeditor5-upload/src/filerepository';
 import EventInfo from '@ckeditor/ckeditor5-utils/src/eventinfo';
-import { uploadImgApi } from 'api';
-import { FileResponse } from 'models';
-
-const URL_IMG = process.env.REACT_APP_URL_IMG;
+import { storage } from 'config/firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 export interface MarkdownProps {
   value: string;
@@ -21,10 +19,11 @@ function Markdown({ value, onChangeValueInput }: MarkdownProps) {
           loader.file.then(async (file: File | null) => {
             try {
               if (file) {
-                const response: FileResponse = await uploadImgApi.post(file);
-
-                resolve({
-                  default: `${URL_IMG}${response.filename}`,
+                const imageRef = ref(storage, `images/${file.name + file.lastModified}`);
+                uploadBytes(imageRef, file).then((snapshot) => {
+                  getDownloadURL(snapshot.ref).then((url) => {
+                    resolve({ default: url });
+                  });
                 });
               }
             } catch (error) {

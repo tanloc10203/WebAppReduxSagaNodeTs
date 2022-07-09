@@ -133,6 +133,19 @@ const dashboardSlice = createSlice({
       state.products.isFetching = false;
     },
 
+    // * FETCH UPDATE PRODUCT
+    fetchProductUpdateStart(state, action: PayloadAction<ProductAttribute>) {
+      state.products.isFetching = true;
+    },
+    fetchProductUpdateSucceed(state) {
+      state.products.isFetching = false;
+      toast.success('Update product is succeed.');
+    },
+    fetchProductUpdateFailed(state, action: PayloadAction<string>) {
+      state.products.error = action.payload;
+      state.products.isFetching = false;
+    },
+
     // * SET FILTER PRODUCT
     setFilterProduct(state, action: PayloadAction<FilterPayload>) {
       state.products.filters = action.payload;

@@ -16,10 +16,10 @@ export default function ProductList({ products, loading, ...other }: ProductList
   return (
     <Grid container spacing={3} {...other}>
       {!loading
-        ? products.map((product) => (
-            <Grid key={product.id} item xs={12} sm={6} md={3}>
-              <ShopProductCard loading={loading} product={product} />
-            </Grid>
+        ? products.map((product, index) => (
+            // <Grid key={product.id} item xs={12} sm={6} md={3}>
+            <ShopProductCard key={index} loading={loading} index={index} product={product} />
+            // </Grid>
           ))
         : [...Array(4)].map((_, index) => (
             <Grid key={index} item xs={12} sm={6} md={3}>

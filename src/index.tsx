@@ -27,6 +27,7 @@ import 'react-awesome-lightbox/build/style.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import registerServiceWorker from 'components/registerServiceWorker';
+import 'config/firebase';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

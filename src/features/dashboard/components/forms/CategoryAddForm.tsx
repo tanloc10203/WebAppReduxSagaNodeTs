@@ -30,7 +30,7 @@ export default function CategoryAddForm({ initialValues, onSubmit }: CategoryAdd
     resolver: yupResolver(schemaCategoryAdd),
   });
 
-  const { error } = useAppSelector(categorySelector);
+  const { error, isFetching } = useAppSelector(categorySelector);
 
   const [slug, setSlug] = useState<string>('');
 
@@ -53,6 +53,8 @@ export default function CategoryAddForm({ initialValues, onSubmit }: CategoryAdd
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSlug(convertToSlug(event.target.value));
   };
+
+  const loading = isSubmitting ? true : isFetching ? true : false;
 
   return (
     <Box
@@ -87,9 +89,9 @@ export default function CategoryAddForm({ initialValues, onSubmit }: CategoryAdd
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
         color="primary"
-        disabled={isSubmitting}
+        disabled={loading}
       >
-        {isSubmitting && <CircularProgress size={16} color="inherit" />}
+        {loading && <CircularProgress size={16} color="inherit" />}
         &nbsp;Add new
       </Button>
     </Box>

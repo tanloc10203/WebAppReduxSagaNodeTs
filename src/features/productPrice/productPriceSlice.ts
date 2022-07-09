@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
 import { FetchDataState } from 'features/dashboard/dashboardSlice';
 import { ProductPriceAttribute } from 'models';
+import { toast } from 'react-toastify';
 
 const initialState: FetchDataState<ProductPriceAttribute> = {
   data: [],
@@ -13,6 +14,7 @@ const productPriceSlice = createSlice({
   name: 'productPrice',
   initialState,
   reducers: {
+    // * FETCH CREATE
     fetchCreateStart(state, actions: PayloadAction<ProductPriceAttribute>) {
       state.isFetching = true;
     },
@@ -22,6 +24,20 @@ const productPriceSlice = createSlice({
     fetchCreateFailed(state, { payload }: PayloadAction<string>) {
       state.error = payload;
       state.isFetching = false;
+      toast.error(state.error);
+    },
+
+    // * FETCH UPDATE
+    fetchUpdateStart(state, actions: PayloadAction<ProductPriceAttribute>) {
+      state.isFetching = true;
+    },
+    fetchUpdateSucceed(state) {
+      state.isFetching = false;
+    },
+    fetchUpdateFailed(state, { payload }: PayloadAction<string>) {
+      state.error = payload;
+      state.isFetching = false;
+      toast.error(state.error);
     },
   },
 });

@@ -2,7 +2,6 @@ import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EventInfo from '@ckeditor/ckeditor5-utils/src/eventinfo';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
-import { uploadImgApi } from 'api';
 import { useAppSelector } from 'app/hooks';
 import { ReviewImg } from 'components/Common';
 import { InputField, SelectField, SelectOptions, UploadFile } from 'components/FormFields';
@@ -12,13 +11,13 @@ import {
   selectCategoryOptions,
   selectProductStatusOptions,
 } from 'features/dashboard/dashboardSlice';
-import { FileResponse, ProductAttribute } from 'models';
-import { ChangeEvent, useState } from 'react';
+import { storage } from 'config/firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { ProductAttribute } from 'models';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { convertToSlug } from 'utils';
 import * as yup from 'yup';
-
-const URL_SERVER = process.env.REACT_APP_URL_IMG;
 
 export interface ProductAddEditFormProps {
   initialValues?: ProductAttribute;
@@ -44,7 +43,7 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
     resolver: yupResolver(schemaProductForm),
   });
 
-  // console.log('check field', fields, append);
+  const { isFetching } = useAppSelector(productSelector);
 
   const [urlImg, setUrl] = useState<string>('');
 
@@ -60,6 +59,14 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
 
   const productStatusOptions = useAppSelector(selectProductStatusOptions);
 
+  useEffect(() => {
+    if (!(initialValues as ProductAttribute).id) return;
+
+    setProductDetail(initialValues?.productDetail as string);
+    setUrl(initialValues?.thumb as string);
+    setSlug(initialValues?.slug as string);
+  }, [initialValues]);
+
   const handleOnSubmit = async (values: ProductAttribute) => {
     if (!onSubmit || productDetail.length < 0 || urlImg.length < 0) return;
 
@@ -73,15 +80,21 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
     await onSubmit?.(newValues);
   };
 
-  const handleChangeImg = async (file: File) => {
-    try {
-      if (!file) return;
-      const response: FileResponse = await uploadImgApi.post(file);
-      const urlImg = `${URL_SERVER}${response.filename}`;
-      setUrl(urlImg);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleImgUpload = (file: File): Promise<string | undefined> => {
+    return new Promise((resolve, reject) => {
+      try {
+        if (file == null) return;
+        const imageRef = ref(storage, `images/${file.name + file.lastModified}`);
+        uploadBytes(imageRef, file).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((url) => {
+            setUrl(url);
+            resolve(url);
+          });
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
   };
 
   const handleChangeProductDetail = (event: EventInfo, editor: Editor) => {
@@ -92,6 +105,8 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSlug(convertToSlug(event.target.value));
   };
+
+  const loading = isSubmitting ? true : isFetching ? true : false;
 
   return (
     <Box
@@ -152,11 +167,13 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
         </Grid>
 
         <Grid item xs={12}>
-          <Markdown value={productDetail} onChangeValueInput={handleChangeProductDetail} />
+          {(!Boolean(initialValues?.id) || Boolean(productDetail)) && (
+            <Markdown value={productDetail} onChangeValueInput={handleChangeProductDetail} />
+          )}
         </Grid>
 
         <Grid item xs={12}>
-          <UploadFile onChange={handleChangeImg} />
+          <UploadFile onChange={handleImgUpload} />
         </Grid>
 
         {urlImg.length > 0 && (
@@ -177,10 +194,10 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
         color="primary"
-        disabled={isSubmitting}
+        disabled={loading}
       >
-        {isSubmitting && <CircularProgress size={16} color="inherit" />}
-        &nbsp;Add new
+        {loading && <CircularProgress size={16} color="inherit" />}
+        &nbsp;{!Boolean(initialValues?.id) ? 'Add new' : 'Save'}
       </Button>
     </Box>
   );

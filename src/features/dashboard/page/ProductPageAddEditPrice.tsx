@@ -1,7 +1,7 @@
 import PriceCheckIcon from '@mui/icons-material/PriceCheck';
 import { Box, Container, LinearProgress, ThemeProvider, Typography } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { productApi } from 'api';
+import { productApi, productPriceApi } from 'api';
 import { useAppDispatch } from 'app/hooks';
 import { AxiosError } from 'axios';
 import { FormLayout } from 'components/FormFields';
@@ -10,18 +10,20 @@ import { ListResponse, ProductAttribute, ProductPriceAttribute } from 'models';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ProductPriceUpdateForm } from '../components/forms';
+import { ProductPageAddEditPriceForm } from '../components/forms';
 
-export default function ProductPageUpdatePrice() {
-  const { productId } = useParams();
+export default function ProductPageAddEditPrice() {
+  const { productId, priceId } = useParams();
 
   const theme = createTheme();
+
+  const isAddMode = !priceId;
 
   const dispatch = useAppDispatch();
 
   const [selected, setSelected] = useState<ProductAttribute>();
 
-  console.log('check params: ', productId);
+  const [selectedPrice, setSelectedPrice] = useState<ProductPriceAttribute>();
 
   useEffect(() => {
     if (!productId || productId === undefined) return;
@@ -37,13 +39,25 @@ export default function ProductPageUpdatePrice() {
     })();
   }, [productId]);
 
+  useEffect(() => {
+    if (!priceId) return;
+
+    (async () => {
+      try {
+        const response: ListResponse<ProductPriceAttribute> = await productPriceApi.getById(
+          +priceId
+        );
+
+        if (!response.error) setSelectedPrice(response.data as ProductPriceAttribute);
+      } catch (error) {
+        if (error instanceof AxiosError) toast.error(error.message);
+      }
+    })();
+  }, [priceId]);
+
   const initialValues: ProductPriceAttribute = {
     price: 0,
-    priceBeforeDiscount: 0,
-    priceMax: 0,
-    priceMaxBeforeDiscount: 0,
-    priceMin: 0,
-    priceMinBeforeDiscount: 0,
+    ...selectedPrice,
   };
 
   const handleSubmit = (values: ProductPriceAttribute) => {
@@ -51,12 +65,16 @@ export default function ProductPageUpdatePrice() {
       try {
         setTimeout(() => {
           if (productId) {
-            const newValues = {
-              ...values,
-              productId: +productId,
-              timeChangeId: -1,
-            };
-            dispatch(productPriceActions.fetchCreateStart(newValues));
+            if (isAddMode) {
+              const newValues = {
+                ...values,
+                productId: +productId,
+                timeChangeId: -1,
+              };
+              dispatch(productPriceActions.fetchCreateStart(newValues));
+            } else {
+              dispatch(productPriceActions.fetchUpdateStart(values));
+            }
             resolve(true);
           }
         }, 300);
@@ -83,7 +101,9 @@ export default function ProductPageUpdatePrice() {
             titleHead="Update price"
             icon={<PriceCheckIcon />}
           >
-            <ProductPriceUpdateForm initialValues={initialValues} onSubmit={handleSubmit} />
+            {(isAddMode || Boolean(selectedPrice)) && (
+              <ProductPageAddEditPriceForm initialValues={initialValues} onSubmit={handleSubmit} />
+            )}
           </FormLayout>
         </Container>
       )}

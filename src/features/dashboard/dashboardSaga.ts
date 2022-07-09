@@ -53,7 +53,12 @@ function* fetchProductCreate({ payload }: PayloadAction<ProductAttribute>) {
     const response: ListResponse<ProductAttribute> = yield call(productApi.create, payload);
 
     if (!response.error) {
+      const filters: FilterPayload = {
+        _page: 1,
+        _limit: 5,
+      };
       yield put(dashboardActions.fetchProductCreateSucceed());
+      yield put(dashboardActions.setFilterProduct(filters));
       history.push('/dashboard/products');
     }
   } catch (error) {
@@ -63,6 +68,30 @@ function* fetchProductCreate({ payload }: PayloadAction<ProductAttribute>) {
       else yield put(dashboardActions.fetchProductCreateFailed(error.message));
     } else if (error instanceof Error) {
       yield put(dashboardActions.fetchProductCreateFailed(error.message));
+    }
+  }
+}
+
+function* fetchProductUpdate({ payload }: PayloadAction<ProductAttribute>) {
+  try {
+    const response: ListResponse<ProductAttribute> = yield call(productApi.update, payload);
+
+    if (!response.error) {
+      const filters: FilterPayload = {
+        _page: 1,
+        _limit: 5,
+      };
+      yield put(dashboardActions.fetchProductUpdateSucceed());
+      yield put(dashboardActions.setFilterProduct(filters));
+      history.push('/dashboard/products');
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status)
+        yield put(dashboardActions.fetchProductUpdateFailed(error.response.data?.message));
+      else yield put(dashboardActions.fetchProductUpdateFailed(error.message));
+    } else if (error instanceof Error) {
+      yield put(dashboardActions.fetchProductUpdateFailed(error.message));
     }
   }
 }
@@ -149,6 +178,10 @@ function* watchFetchProductCreate() {
   yield takeLatest(dashboardActions.fetchProductCreateStart.type, fetchProductCreate);
 }
 
+function* watchFetchProductUpdate() {
+  yield takeLatest(dashboardActions.fetchProductUpdateStart.type, fetchProductUpdate);
+}
+
 function* watchFetchProductStatus() {
   yield takeLatest(dashboardActions.fetchProductStatusStart.type, fetchProductStatus);
 }
@@ -178,5 +211,6 @@ export default function* dashboardSaga() {
     watchFetchCategoryCreate(),
     watchSetFilterNameLike(),
     watchFetchCategoryEdit(),
+    watchFetchProductUpdate(),
   ]);
 }
