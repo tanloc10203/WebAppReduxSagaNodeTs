@@ -48,13 +48,13 @@ export class Product extends CommonController {
     res: Response
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
-      const { name, key } = req.body;
+      const { categoryId, statusPId } = req.body;
       const id = parseInt(req.params.id);
 
-      if (!name || !key || !id)
+      if (!categoryId || !statusPId || !id)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 
-      const response = await super.handleUpdate<StatusProductAttribute>(id, { name, key });
+      const response = await super.handleUpdate<StatusProductAttribute>(id, { ...req.body });
 
       if (response[0] === 0)
         return res.status(400).json({ message: 'ID was not found !', error: true });
@@ -125,7 +125,7 @@ export class Product extends CommonController {
           model: db.ProductPrice,
           as: 'price',
           attributes: {
-            exclude: ['id', 'createdAt', 'updatedAt'],
+            exclude: ['createdAt', 'updatedAt'],
           },
         },
       ]);

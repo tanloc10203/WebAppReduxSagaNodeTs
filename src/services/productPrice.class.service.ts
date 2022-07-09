@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-import { FindAttributeOptions, Model, ModelCtor } from 'sequelize/types';
+import { Model, ModelCtor } from 'sequelize/types';
 import { CommonController } from '../class';
 import { db } from '../config/db';
 import log from '../logger';
 import { ProductPriceAttribute } from '../models/productprice.model';
-import { StatusProductAttribute } from '../models/statusproduct.model';
 import { TimeChangeAttribute } from '../models/timechange.modle';
 
 export class ProductPrice extends CommonController {
@@ -59,13 +58,15 @@ export class ProductPrice extends CommonController {
     res: Response
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
-      const { name, key } = req.body;
+      const { productId, timeChangeId } = req.body;
       const id = parseInt(req.params.id);
 
-      if (!name || !key || !id)
+      if (!productId || !timeChangeId || !id)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 
-      const response = await super.handleUpdate<StatusProductAttribute>(id, { name, key });
+      await db.TimeChange.update({ time: new Date() }, { where: { id: timeChangeId } });
+
+      const response = await super.handleUpdate<ProductPriceAttribute>(id, { ...req.body });
 
       if (response[0] === 0)
         return res.status(400).json({ message: 'ID was not found !', error: true });
