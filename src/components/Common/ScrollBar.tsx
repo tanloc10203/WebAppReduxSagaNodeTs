@@ -30,13 +30,13 @@ const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
   },
 }));
 
-export interface ScrollbarProps {
+export interface ScrollBarProps {
   children: ReactNode;
   sx?: Object;
   [key: string]: any;
 }
 
-export default function Scrollbar({ children, sx, ...other }: ScrollbarProps) {
+export default function ScrollBar({ children, sx, ...other }: ScrollBarProps) {
   const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);

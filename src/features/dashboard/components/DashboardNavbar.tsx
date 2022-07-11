@@ -37,7 +37,11 @@ export function DashboardNavbar({ onOpenSidebar }: DashboardNavbarProps) {
       <ToolbarStyle>
         <IconButton
           onClick={onOpenSidebar}
-          sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}
+          sx={{
+            mr: 1,
+            color: 'text.primary',
+            display: { lg: 'none' },
+          }}
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>

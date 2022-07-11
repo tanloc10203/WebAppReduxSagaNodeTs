@@ -32,10 +32,12 @@ const Register = Loader(lazy(() => import('features/auth/pages/Register')));
 
 const Page404 = Loader(lazy(() => import('components/Common/Page404')));
 
+const HomePage = Loader(lazy(() => import('features/home')));
+
 const appRoutes = {
   private: [{ path: '/logout', element: Logout, index: true }],
   public: [
-    { path: '/', element: Navigate },
+    { path: '/', element: HomePage },
     {
       path: '/dashboard/*',
       element: DashboardLayout,
