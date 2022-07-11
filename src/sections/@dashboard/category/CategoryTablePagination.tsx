@@ -13,7 +13,7 @@ import { CategoryAttribute, FilterPayload, HeadLabelState, PaginationParams } fr
 import { Card, Table, TableContainer } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { ScrollBar } from 'components/Common';
-import { categorySelector, dashboardActions } from 'features/dashboard/dashboardSlice';
+import { categoryActions, categorySelector } from 'features/category/categorySlice';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import {
   CategoryListHead,
@@ -79,7 +79,7 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
   ) => {
     const isAsc = _name === property && _order === 'ASC';
     dispatch(
-      dashboardActions.setFilterCategory({
+      categoryActions.setFilterCategory({
         ...filters,
         _order: isAsc ? 'DESC' : 'ASC',
         _name: property,
@@ -117,12 +117,12 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(dashboardActions.setFilterCategory({ ...filters, _page: newPage } as FilterPayload));
+    dispatch(categoryActions.setFilterCategory({ ...filters, _page: newPage } as FilterPayload));
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
-      dashboardActions.setFilterCategory({
+      categoryActions.setFilterCategory({
         ...filters,
         _page: 0,
         _limit: parseInt(event.target.value, 10),
@@ -136,7 +136,7 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
 
   const handleFilterByName = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
-      dashboardActions.setFilterNameLike({
+      categoryActions.setFilterNameLike({
         ...filters,
         name_like: event.target.value,
         _page: 0,

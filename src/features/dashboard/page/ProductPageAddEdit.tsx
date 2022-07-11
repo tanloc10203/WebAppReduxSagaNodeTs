@@ -4,6 +4,7 @@ import { productApi } from 'api';
 import { useAppDispatch } from 'app/hooks';
 import { AxiosError } from 'axios';
 import { FormLayout } from 'components/FormFields';
+import { categoryActions } from 'features/category/categorySlice';
 import { FilterPayload, ListResponse, ProductAttribute } from 'models';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -23,7 +24,7 @@ export default function ProductPageAddEdit() {
   useEffect(() => {
     const filters: FilterPayload = {} as FilterPayload;
     dispatch(dashboardActions.fetchProductStatusStart());
-    dispatch(dashboardActions.fetchCategoryStart({ params: filters, notPrams: true }));
+    dispatch(categoryActions.fetchCategoryStart({ params: filters, notPrams: true }));
   }, [dispatch]);
 
   useEffect(() => {

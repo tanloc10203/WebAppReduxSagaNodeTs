@@ -1,14 +1,14 @@
-import { FormLayout } from 'components/FormFields';
-import { CategoryAttribute, ListResponse } from 'models';
 import CategoryIcon from '@mui/icons-material/Category';
-import { CategoryAddForm } from '../components/forms';
-import { useParams } from 'react-router-dom';
-import { useAppDispatch } from 'app/hooks';
-import { useEffect, useState } from 'react';
 import { categoryApi } from 'api';
+import { useAppDispatch } from 'app/hooks';
 import { AxiosError } from 'axios';
+import { FormLayout } from 'components/FormFields';
+import { categoryActions } from 'features/category/categorySlice';
+import { CategoryAttribute, ListResponse } from 'models';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { dashboardActions } from '../dashboardSlice';
+import { CategoryAddForm } from '../components/forms';
 
 export default function CategoryPageEdit() {
   const { categoryId } = useParams();
@@ -42,7 +42,7 @@ export default function CategoryPageEdit() {
     return new Promise((resolve, reject) => {
       try {
         setTimeout(() => {
-          dispatch(dashboardActions.fetchCategoryEditStart(values));
+          dispatch(categoryActions.fetchCategoryEditStart(values));
           resolve(true);
         }, 2000);
       } catch (error) {

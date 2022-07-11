@@ -1,14 +1,14 @@
-import { FormLayout } from 'components/FormFields';
-import { useParams } from 'react-router-dom';
 import CategoryIcon from '@mui/icons-material/Category';
-import { CategoryAddForm } from '../components/forms';
-import { CategoryAttribute, ListResponse } from 'models';
-import { useAppDispatch } from 'app/hooks';
-import { dashboardActions } from '../dashboardSlice';
-import { useEffect, useState } from 'react';
 import { categoryApi } from 'api';
+import { useAppDispatch } from 'app/hooks';
 import { AxiosError } from 'axios';
+import { FormLayout } from 'components/FormFields';
+import { categoryActions } from 'features/category/categorySlice';
+import { CategoryAttribute, ListResponse } from 'models';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { CategoryAddForm } from '../components/forms';
 
 export default function CategoryPageAdd() {
   const { parentCatId } = useParams();
@@ -55,7 +55,7 @@ export default function CategoryPageAdd() {
             }
           }
 
-          dispatch(dashboardActions.fetchCategoryCreateStart(newValues));
+          dispatch(categoryActions.fetchCategoryCreateStart(newValues));
           resolve(true);
         }, 2000);
       } catch (error) {

@@ -1,13 +1,11 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GetAllCategoryApi } from 'api';
 import { RootState } from 'app/store';
 import {
-  CategoryAttribute,
   FilterPayload,
+  ListResponse,
+  PaginationParams,
   ProductAttribute,
   ProductStatusAttribute,
-  PaginationParams,
-  ListResponse,
 } from 'models';
 import { toast } from 'react-toastify';
 
@@ -20,30 +18,11 @@ export interface FetchDataState<T> {
 }
 
 export interface DashboardSliceState {
-  category: FetchDataState<CategoryAttribute>;
   productStatus: FetchDataState<ProductStatusAttribute>;
   products: FetchDataState<ProductAttribute>;
 }
 
 const initialState: DashboardSliceState = {
-  category: {
-    error: '',
-    isFetching: false,
-    data: [],
-    filters: {
-      _order: 'ASC',
-      _name: 'id',
-      _limit: 5,
-      _page: 0,
-      name_like: '',
-      level: 1,
-    },
-    pagination: {
-      _limit: 5,
-      _page: 0,
-      _totalRows: 15,
-    },
-  },
   productStatus: {
     error: '',
     isFetching: false,
@@ -69,42 +48,6 @@ const dashboardSlice = createSlice({
   name: 'dashboard',
   initialState,
   reducers: {
-    // * FETCH CREATE CATEGORY
-    fetchCategoryCreateStart(state, action: PayloadAction<CategoryAttribute>) {
-      state.category.isFetching = true;
-    },
-    fetchCategoryCreateSucceed(state) {
-      state.category.isFetching = false;
-    },
-    fetchCategoryCreateFailed(state, action: PayloadAction<string>) {
-      state.category.error = action.payload;
-      state.category.isFetching = false;
-    },
-
-    // * FETCH EDIT CATEGORY
-    fetchCategoryEditStart(state, action: PayloadAction<CategoryAttribute>) {
-      state.category.isFetching = true;
-    },
-    fetchCategoryEditSucceed(state) {
-      state.category.isFetching = false;
-    },
-
-    // * FETCH CATEGORY
-    fetchCategoryStart(state, action: PayloadAction<GetAllCategoryApi>) {
-      state.category.isFetching = true;
-    },
-    fetchCategorySucceed(state, action: PayloadAction<ListResponse<CategoryAttribute>>) {
-      state.category.data = action.payload.data as Array<CategoryAttribute>;
-      state.category.isFetching = false;
-      state.category.pagination = action.payload?.pagination;
-    },
-    fetchCategoryFailed(state, action: PayloadAction<string>) {
-      state.category.data = [];
-      state.category.error = action.payload;
-      state.category.isFetching = false;
-      toast.error('GET CATEGORY: ' + state.category.error);
-    },
-
     // * FETCH PRODUCT STATUS
     fetchProductStatusStart(state) {
       state.productStatus.isFetching = true;
@@ -151,14 +94,6 @@ const dashboardSlice = createSlice({
       state.products.filters = action.payload;
     },
 
-    // * SET FILTER CATEGORY
-    setFilterCategory(state, action: PayloadAction<FilterPayload>) {
-      state.category.filters = action.payload;
-    },
-
-    // * SET FILTER NAME LIKE ==> Use Debounce effect redux saga
-    setFilterNameLike(state, action: PayloadAction<FilterPayload>) {},
-
     // * FETCH PRODUCT
     fetchProductStart(state, action: PayloadAction<FilterPayload>) {
       state.products.isFetching = true;
@@ -180,10 +115,6 @@ const dashboardSlice = createSlice({
 // Actions
 export const dashboardActions = dashboardSlice.actions;
 
-// Selectors
-export const categorySelector = (state: RootState) => state.dashboard.category;
-export const categoryDataSelector = (state: RootState) => state.dashboard.category.data;
-
 export const productStatusSelector = (state: RootState) => state.dashboard.productStatus;
 export const productStatusDataSelector = (state: RootState) => state.dashboard.productStatus.data;
 
@@ -194,14 +125,6 @@ export const filterSelector = (state: RootState) =>
 
 export const paginationSelector = (state: RootState) =>
   state.dashboard.products.pagination as PaginationParams;
-
-// Create Selector
-export const selectCategoryOptions = createSelector(categoryDataSelector, (category) =>
-  category.map((item) => ({
-    label: item.name,
-    value: item.id,
-  }))
-);
 
 export const selectProductStatusOptions = createSelector(
   productStatusDataSelector,

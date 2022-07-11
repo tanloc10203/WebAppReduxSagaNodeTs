@@ -6,11 +6,7 @@ import { useAppSelector } from 'app/hooks';
 import { ReviewImg } from 'components/Common';
 import { InputField, SelectField, SelectOptions, UploadFile } from 'components/FormFields';
 import Markdown from 'components/Markdown';
-import {
-  productSelector,
-  selectCategoryOptions,
-  selectProductStatusOptions,
-} from 'features/dashboard/dashboardSlice';
+import { productSelector, selectProductStatusOptions } from 'features/dashboard/dashboardSlice';
 import { storage } from 'config/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { ProductAttribute } from 'models';
@@ -18,6 +14,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { convertToSlug } from 'utils';
 import * as yup from 'yup';
+import { selectCategoryOptions } from 'features/category/categorySlice';
 
 export interface ProductAddEditFormProps {
   initialValues?: ProductAttribute;

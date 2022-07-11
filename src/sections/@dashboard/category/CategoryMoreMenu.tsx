@@ -1,7 +1,7 @@
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Iconify } from 'components/Common';
-import { categorySelector, dashboardActions } from 'features/dashboard/dashboardSlice';
+import { categoryActions, categorySelector } from 'features/category/categorySlice';
 import { FilterPayload } from 'models';
 import { ElementType, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -62,7 +62,7 @@ export function CategoryMoreMenu({ categoryId, level }: CategoryMoreMenuProps) {
       parentCatId: categoryId,
       _page: 0,
     };
-    dispatch(dashboardActions.setFilterCategory(newFilter));
+    dispatch(categoryActions.setFilterCategory(newFilter));
   }
 
   return (

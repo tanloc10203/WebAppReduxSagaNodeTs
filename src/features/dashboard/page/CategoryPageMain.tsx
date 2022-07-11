@@ -2,11 +2,11 @@ import { Button, Container, LinearProgress, Stack, Typography } from '@mui/mater
 import { Iconify, Page } from 'components/Common';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { categorySelector, dashboardActions } from '../dashboardSlice';
-import { CategoryTablePagination } from 'sections/@dashboard/category';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { categoryActions, categorySelector } from 'features/category/categorySlice';
 import { FilterPayload } from 'models';
+import { CategoryTablePagination } from 'sections/@dashboard/category';
 
 export default function CategoryPageMain() {
   const { isFetching, filters } = useAppSelector(categorySelector);
@@ -19,7 +19,7 @@ export default function CategoryPageMain() {
       level: others.level - 1,
       _page: 0,
     };
-    dispatch(dashboardActions.setFilterCategory(newFilters));
+    dispatch(categoryActions.setFilterCategory(newFilters));
   };
 
   return (

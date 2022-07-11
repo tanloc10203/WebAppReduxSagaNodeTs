@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Alert, Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
 import { InputField } from 'components/FormFields';
-import { categorySelector } from 'features/dashboard/dashboardSlice';
+import { categorySelector } from 'features/category/categorySlice';
 import { CategoryAttribute } from 'models';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
