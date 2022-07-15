@@ -1,6 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
+import { useAppDispatch } from 'app/hooks';
+import { categoryActions } from 'features/category/categorySlice';
+import { useEffect } from 'react';
 import { ProductCartWidget } from 'sections/@dashboard/products';
 import { BottomAppBar, Header } from './components';
 import { BackToTop } from './components/ScrollTop';
@@ -40,6 +43,14 @@ const MainStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function Home() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    (() => {
+      dispatch(categoryActions.fetchCategoryTreeStart());
+    })();
+  }, [dispatch]);
+
   return (
     <RootStyle>
       <CssBaseline />

@@ -4,10 +4,15 @@ import { RootState } from 'app/store';
 import { CategoryAttribute, FetchDataStateSlice, FilterPayload, ListResponse } from 'models';
 import { toast } from 'react-toastify';
 
-const initialState: FetchDataStateSlice<CategoryAttribute> = {
+interface CategoryState extends FetchDataStateSlice<CategoryAttribute> {
+  dataTree: Array<CategoryAttribute>;
+}
+
+const initialState: CategoryState = {
   error: '',
   isFetching: false,
   data: [],
+  dataTree: [],
   filters: {
     _order: 'ASC',
     _name: 'id',
@@ -37,10 +42,18 @@ const categorySlice = createSlice({
       state.pagination = action.payload?.pagination;
     },
     fetchCategoryFailed(state, action: PayloadAction<string>) {
-      state.data = [];
       state.error = action.payload;
       state.isFetching = false;
       toast.error('GET CATEGORY: ' + state.error);
+    },
+
+    // * FETCH CATEGORY
+    fetchCategoryTreeStart(state) {
+      state.isFetching = true;
+    },
+    fetchCategoryTreeSucceed(state, action: PayloadAction<ListResponse<CategoryAttribute>>) {
+      state.dataTree = action.payload.data as Array<CategoryAttribute>;
+      state.isFetching = false;
     },
 
     // * FETCH CREATE CATEGORY
@@ -48,10 +61,6 @@ const categorySlice = createSlice({
       state.isFetching = true;
     },
     fetchCategoryCreateSucceed(state) {
-      state.isFetching = false;
-    },
-    fetchCategoryCreateFailed(state, action: PayloadAction<string>) {
-      state.error = action.payload;
       state.isFetching = false;
     },
 
@@ -79,6 +88,7 @@ export const categoryActions = categorySlice.actions;
 // Selectors
 export const categorySelector = (state: RootState) => state.category;
 export const categoryDataSelector = (state: RootState) => state.category.data;
+export const categoryDataTreeSelector = (state: RootState) => state.category.dataTree;
 export const selectCategoryOptions = createSelector(categoryDataSelector, (category) =>
   category.map((item) => ({
     label: item.name,

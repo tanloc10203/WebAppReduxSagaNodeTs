@@ -25,6 +25,10 @@ const categoryApi = {
   update(data: CategoryAttribute): Promise<ListResponse<CategoryAttribute>> {
     return axiosClient.patch(categoryApi.name + '/' + data.id, data);
   },
+
+  getTree(): Promise<ListResponse<CategoryAttribute>> {
+    return axiosClient.get(categoryApi.name + '/tree');
+  },
 };
 
 export default categoryApi;

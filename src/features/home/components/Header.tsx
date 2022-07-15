@@ -1,11 +1,10 @@
-import { Button, Fade, Menu, MenuItem, MenuList, Paper, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import { alpha, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import { Logo } from 'components/Common';
 import { AccountPopover, NotificationsPopover, SearchBar } from 'features/dashboard/components';
-import { MouseEvent, useState } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import MenuHeader from './MenuHeader';
 
 interface Props {}
 
@@ -50,74 +49,13 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-const StackStyle = styled(Stack)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
-  [theme.breakpoints.up('md')]: {
-    display: 'none',
-  },
-  [theme.breakpoints.up('lg')]: {
-    display: 'flex',
-  },
-}));
-
 export default function Header(props: Props) {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
   return (
     <RootStyle>
       <ToolbarStyle>
         <Logo />
 
-        <StackStyle>
-          <Button
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onMouseOver={handleClick}
-            color="inherit"
-            endIcon={<KeyboardArrowDownIcon />}
-          >
-            Danh mục
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              onMouseLeave: handleClose,
-            }}
-            TransitionComponent={Fade}
-          >
-            <MenuItem sx={{ pl: 2, pr: 10 }} onClick={handleClose}>
-              Profile
-            </MenuItem>
-            <MenuItem sx={{ pl: 2, pr: 10 }} onClick={handleClose}>
-              My account
-            </MenuItem>
-            <MenuItem sx={{ pl: 2, pr: 10 }} onClick={handleClose}>
-              Logout
-            </MenuItem>
-          </Menu>
-          <Button variant="text" color="inherit" sx={{ ml: 2 }}>
-            Blog
-          </Button>
-        </StackStyle>
+        <MenuHeader />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           <SearchBar />

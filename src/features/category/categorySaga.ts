@@ -23,6 +23,22 @@ function* fetchCategory({ payload }: PayloadAction<GetAllCategoryApi>) {
   }
 }
 
+function* fetchCategoryTree() {
+  try {
+    const response: ListResponse<CategoryAttribute> = yield call(categoryApi.getTree);
+
+    if (!response.error) yield put(categoryActions.fetchCategoryTreeSucceed(response));
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status)
+        yield put(categoryActions.fetchCategoryFailed(error.response.data?.message));
+      yield put(categoryActions.fetchCategoryFailed(error.message));
+    } else if (error instanceof Error) {
+      yield put(categoryActions.fetchCategoryFailed(error.message));
+    }
+  }
+}
+
 function* fetchCategoryCreate({ payload }: PayloadAction<CategoryAttribute>) {
   try {
     const response: ListResponse<CategoryAttribute> = yield call(categoryApi.create, payload);
@@ -40,10 +56,10 @@ function* fetchCategoryCreate({ payload }: PayloadAction<CategoryAttribute>) {
   } catch (error) {
     if (error instanceof AxiosError) {
       if (error.response?.status)
-        yield put(categoryActions.fetchCategoryCreateFailed(error.response.data?.message));
-      else yield put(categoryActions.fetchCategoryCreateFailed(error.message));
+        yield put(categoryActions.fetchCategoryFailed(error.response.data?.message));
+      else yield put(categoryActions.fetchCategoryFailed(error.message));
     } else if (error instanceof Error) {
-      yield put(categoryActions.fetchCategoryCreateFailed(error.message));
+      yield put(categoryActions.fetchCategoryFailed(error.message));
     }
   }
 }
@@ -66,10 +82,10 @@ function* fetchCategoryEdit({ payload }: PayloadAction<CategoryAttribute>) {
   } catch (error) {
     if (error instanceof AxiosError) {
       if (error.response?.status)
-        yield put(categoryActions.fetchCategoryCreateFailed(error.response.data?.message));
-      else yield put(categoryActions.fetchCategoryCreateFailed(error.message));
+        yield put(categoryActions.fetchCategoryFailed(error.response.data?.message));
+      else yield put(categoryActions.fetchCategoryFailed(error.message));
     } else if (error instanceof Error) {
-      yield put(categoryActions.fetchCategoryCreateFailed(error.message));
+      yield put(categoryActions.fetchCategoryFailed(error.message));
     }
   }
 }
@@ -80,6 +96,10 @@ function* handleSearchWithDebounce({ payload }: PayloadAction<FilterPayload>) {
 
 function* watchFetchCategory() {
   yield takeLatest(categoryActions.fetchCategoryStart.type, fetchCategory);
+}
+
+function* watchFetchCategoryTree() {
+  yield takeLatest(categoryActions.fetchCategoryTreeStart.type, fetchCategoryTree);
 }
 
 function* watchFetchCategoryCreate() {
@@ -96,6 +116,7 @@ function* watchFetchCategoryEdit() {
 
 export default function* categorySaga() {
   yield all([
+    watchFetchCategoryTree(),
     watchFetchCategory(),
     watchFetchCategoryCreate(),
     watchSetFilterNameLike(),
