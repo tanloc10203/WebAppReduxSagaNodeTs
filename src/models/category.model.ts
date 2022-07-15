@@ -53,7 +53,7 @@ export function initCategory(sequelize: Sequelize): void {
       },
       name: DataTypes.STRING,
       slug: DataTypes.STRING,
-      parentCatId: DataTypes.INTEGER,
+      parentCatId: { type: DataTypes.INTEGER },
       level: DataTypes.INTEGER,
       image: DataTypes.STRING,
     },
@@ -69,5 +69,11 @@ export function associateCategory(): void {
     sourceKey: 'id',
     foreignKey: 'categoryId',
     as: 'categoryId',
+  });
+
+  Category.hasMany(Category, {
+    onDelete: 'CASCADE',
+    foreignKey: 'parentCatId',
+    as: 'children',
   });
 }

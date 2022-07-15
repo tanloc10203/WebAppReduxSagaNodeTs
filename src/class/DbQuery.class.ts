@@ -33,8 +33,8 @@ export class DbQuery {
     });
   }
 
-  public handleGetAll() {
-    return this.Db.findAll();
+  public handleGetAll(options?: FindOptions<Attributes<Model>>) {
+    return this.Db.findAll(options);
   }
 
   public handleGetAllAndFilter(filter: FilterPayload) {

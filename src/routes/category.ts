@@ -7,6 +7,7 @@ categoryRoute.post('/', categoryController.create);
 categoryRoute.get('/', categoryController.getAll);
 categoryRoute.patch('/:id', categoryController.update);
 categoryRoute.delete('/:id', categoryController.delete);
+categoryRoute.get('/tree', categoryController.getAllTree);
 categoryRoute.get('/:id', categoryController.getById);
 
 export default categoryRoute;

@@ -13,6 +13,10 @@ export const categoryController = {
     return categoryController.db.getAll(req, res);
   },
 
+  getAllTree(req: Request, res: Response) {
+    return categoryController.db.getAllTree(req, res);
+  },
+
   update(req: Request, res: Response) {
     return categoryController.db.update(req, res);
   },

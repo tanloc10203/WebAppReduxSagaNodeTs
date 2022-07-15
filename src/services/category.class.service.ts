@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Attributes, FindOptions, Model, ModelCtor, WhereOptions } from 'sequelize/types';
 import { CommonController } from '../class';
+import { db } from '../config/db';
 import log from '../logger';
 import { CategoryAttribute } from '../models/category.model';
 import { FilterPayload } from '../utils';
@@ -138,6 +139,41 @@ export class Category extends CommonController {
         error: false,
         data: response.rows,
         pagination: { _limit: _limit, _page: _page, _totalRows: response.count },
+      });
+    } catch (error) {
+      log.error(error);
+      if (error instanceof Error)
+        return res.status(500).json({ message: 'ERROR FROM SERVER!!!', error: error.message });
+    }
+  }
+
+  // @Override
+  public async getAllTree(
+    req: Request,
+    res: Response
+  ): Promise<Response<any, Record<string, any>> | undefined> {
+    try {
+      let response = await super.handleGetAll({
+        include: [
+          {
+            model: db.Category,
+            as: 'children',
+          },
+        ],
+      });
+
+      if (!response) {
+        return res.status(404).json({
+          message: 'NOT CATEGORY',
+          error: false,
+          data: [],
+        });
+      }
+
+      res.status(200).json({
+        message: 'GET ALL SUCCEED.',
+        error: false,
+        data: response,
       });
     } catch (error) {
       log.error(error);
