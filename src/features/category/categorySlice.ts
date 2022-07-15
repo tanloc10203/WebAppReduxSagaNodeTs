@@ -1,11 +1,10 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GetAllCategoryApi } from 'api';
 import { RootState } from 'app/store';
-import { FetchDataState } from 'features/dashboard/dashboardSlice';
-import { CategoryAttribute, FilterPayload, ListResponse } from 'models';
+import { CategoryAttribute, FetchDataStateSlice, FilterPayload, ListResponse } from 'models';
 import { toast } from 'react-toastify';
 
-const initialState: FetchDataState<CategoryAttribute> = {
+const initialState: FetchDataStateSlice<CategoryAttribute> = {
   error: '',
   isFetching: false,
   data: [],

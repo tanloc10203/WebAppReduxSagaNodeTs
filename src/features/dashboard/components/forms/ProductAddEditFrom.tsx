@@ -1,20 +1,21 @@
 import Editor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
 import EventInfo from '@ckeditor/ckeditor5-utils/src/eventinfo';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
 import { ReviewImg } from 'components/Common';
 import { InputField, SelectField, SelectOptions, UploadFile } from 'components/FormFields';
 import Markdown from 'components/Markdown';
-import { productSelector, selectProductStatusOptions } from 'features/dashboard/dashboardSlice';
 import { storage } from 'config/firebase';
+import { selectCategoryOptions } from 'features/category/categorySlice';
+import { productSelector } from 'features/product/productSlice';
+import { selectProductStatusOptions } from 'features/productStatus/productStatusSlice';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { ProductAttribute } from 'models';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { convertToSlug } from 'utils';
 import * as yup from 'yup';
-import { selectCategoryOptions } from 'features/category/categorySlice';
 
 export interface ProductAddEditFormProps {
   initialValues?: ProductAttribute;
@@ -49,8 +50,6 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
   const [open, setOpen] = useState<boolean>(false);
 
   const [slug, setSlug] = useState<string>('');
-
-  const { error } = useAppSelector(productSelector);
 
   const categoryOptions = useAppSelector(selectCategoryOptions);
 
@@ -112,8 +111,6 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
       sx={{ mt: 1, width: '100%' }}
       onSubmit={handleSubmit(handleOnSubmit)}
     >
-      {error && <Alert severity="error">{error}</Alert>}
-
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <InputField

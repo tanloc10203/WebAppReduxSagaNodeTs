@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'app/store';
-import { FetchDataState } from 'features/dashboard/dashboardSlice';
-import { ProductPriceAttribute } from 'models';
+import { ProductPriceAttribute, FetchDataStateSlice } from 'models';
 import { toast } from 'react-toastify';
 
-const initialState: FetchDataState<ProductPriceAttribute> = {
+const initialState: FetchDataStateSlice<ProductPriceAttribute> = {
   data: [],
   error: '',
   isFetching: false,

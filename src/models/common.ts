@@ -79,3 +79,11 @@ export interface HeadLabelState {
   label?: string | null;
   alignRight?: boolean | null;
 }
+
+export interface FetchDataStateSlice<T> {
+  error: string;
+  isFetching: boolean;
+  data: Array<T>;
+  filters?: FilterPayload;
+  pagination?: PaginationParams;
+}

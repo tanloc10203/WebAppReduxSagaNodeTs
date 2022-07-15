@@ -5,12 +5,13 @@ import { useAppDispatch } from 'app/hooks';
 import { AxiosError } from 'axios';
 import { FormLayout } from 'components/FormFields';
 import { categoryActions } from 'features/category/categorySlice';
+import { productActions } from 'features/product/productSlice';
+import { productStatusActions } from 'features/productStatus/productStatusSlice';
 import { FilterPayload, ListResponse, ProductAttribute } from 'models';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ProductAddEditForm } from '../components/forms';
-import { dashboardActions } from '../dashboardSlice';
 
 export default function ProductPageAddEdit() {
   const { productId } = useParams();
@@ -23,7 +24,7 @@ export default function ProductPageAddEdit() {
 
   useEffect(() => {
     const filters: FilterPayload = {} as FilterPayload;
-    dispatch(dashboardActions.fetchProductStatusStart());
+    dispatch(productStatusActions.fetchProductStatusStart());
     dispatch(categoryActions.fetchCategoryStart({ params: filters, notPrams: true }));
   }, [dispatch]);
 
@@ -53,9 +54,9 @@ export default function ProductPageAddEdit() {
       try {
         setTimeout(() => {
           if (isAddMode) {
-            dispatch(dashboardActions.fetchProductCreateStart(values));
+            dispatch(productActions.fetchProductCreateStart(values));
           } else {
-            dispatch(dashboardActions.fetchProductUpdateStart(values));
+            dispatch(productActions.fetchProductUpdateStart(values));
           }
           resolve(true);
         }, 2000);

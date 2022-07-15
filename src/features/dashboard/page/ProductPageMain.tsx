@@ -1,15 +1,15 @@
 import { Button, Container, Pagination, Stack, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Iconify, Page } from 'components/Common';
+import {
+  filterSelector,
+  paginationSelector,
+  productActions,
+  productSelector,
+} from 'features/product/productSlice';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { ProductFilterSidebar, ProductList, ProductSort } from 'sections/@dashboard/products';
-import {
-  dashboardActions,
-  filterSelector,
-  paginationSelector,
-  productSelector,
-} from '../dashboardSlice';
 
 export default function ProductPageMain() {
   const [openFilter, setOpenFilter] = useState(false);
@@ -19,7 +19,7 @@ export default function ProductPageMain() {
   const pagination = useAppSelector(paginationSelector);
 
   useEffect(() => {
-    dispatch(dashboardActions.fetchProductStart(filters));
+    dispatch(productActions.fetchProductStart(filters));
   }, [dispatch, filters]);
 
   const handleOpenFilter = () => {
@@ -31,7 +31,7 @@ export default function ProductPageMain() {
   };
 
   const handleChangePagination = (event: ChangeEvent<unknown>, page: number) => {
-    dispatch(dashboardActions.setFilterProduct({ ...filters, _page: page }));
+    dispatch(productActions.setFilterProduct({ ...filters, _page: page }));
   };
 
   return (

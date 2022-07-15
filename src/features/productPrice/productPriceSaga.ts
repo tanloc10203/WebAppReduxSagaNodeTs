@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { productPriceApi } from 'api';
 import { AxiosError } from 'axios';
-import { dashboardActions } from 'features/dashboard/dashboardSlice';
+import { productActions } from 'features/product/productSlice';
 import { FilterPayload, ListResponse, ProductPriceAttribute } from 'models';
 import { toast } from 'react-toastify';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
@@ -20,7 +20,7 @@ function* fetchCreateProductPrice({ payload }: PayloadAction<ProductPriceAttribu
         _page: 1,
         _limit: 5,
       };
-      yield put(dashboardActions.setFilterProduct(filters));
+      yield put(productActions.setFilterProduct(filters));
       yield put(productPriceActions.fetchCreateSucceed());
       toast.success('Cập nhật giá thành công');
       history.push('/dashboard/products');
@@ -49,7 +49,7 @@ function* fetchUpdateProductPrice({ payload }: PayloadAction<ProductPriceAttribu
         _limit: 5,
       };
       yield put(productPriceActions.fetchCreateSucceed());
-      yield put(dashboardActions.setFilterProduct(filters));
+      yield put(productActions.setFilterProduct(filters));
       toast.success('Cập nhật giá thành công');
       history.push('/dashboard/products');
     }
