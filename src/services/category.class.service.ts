@@ -73,6 +73,13 @@ export class Category extends CommonController {
       if (!name || !slug || !id)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 
+      const findCat: CategoryAttribute = (await super.handleFind({ where: { name, slug } }))?.get();
+
+      if (findCat.id !== id)
+        return res
+          .status(400)
+          .json({ message: 'Name and Slug were existed with "ID" difference !', error: true });
+
       const response = await super.handleUpdate<CategoryAttribute>(id, { ...req.body });
 
       if (response[0] === 0)

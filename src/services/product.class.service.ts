@@ -48,13 +48,22 @@ export class Product extends CommonController {
     res: Response
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
-      const { categoryId, statusPId } = req.body;
+      const { categoryId, statusPId, slug } = req.body;
       const id = parseInt(req.params.id);
 
       if (!categoryId || !statusPId || !id)
         return res.status(404).json({ message: 'Missing parameter !', error: true });
 
-      const response = await super.handleUpdate<StatusProductAttribute>(id, { ...req.body });
+      const findProduct: ProductAttribute = (
+        await super.handleFind({ where: { slug, categoryId } })
+      )?.get();
+
+      if (findProduct.id !== id)
+        return res
+          .status(400)
+          .json({ message: 'Name and Slug were existed with "ID" difference !', error: true });
+
+      const response = await super.handleUpdate<ProductAttribute>(id, { ...req.body });
 
       if (response[0] === 0)
         return res.status(400).json({ message: 'ID was not found !', error: true });
