@@ -154,6 +154,7 @@ export class Category extends CommonController {
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
       let response = await super.handleGetAll({
+        where: { level: 1 },
         include: [
           {
             model: db.Category,
