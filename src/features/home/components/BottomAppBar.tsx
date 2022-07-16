@@ -7,8 +7,11 @@ import Badge, { BadgeProps } from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
+import { useAppSelector } from 'app/hooks';
+import { categorySelector } from 'features/category/categorySlice';
 import { useState } from 'react';
 import MenuSideBar from './MenuSideBar';
+import MenuSideBarCategory from './MenuSideBarCategory';
 
 const APP_BAR_MOBILE = 64;
 
@@ -52,31 +55,53 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
 }));
 
 export default function BottomAppBar() {
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [open, setOpen] = useState<{ menu: boolean; category: boolean }>({
+    menu: false,
+    category: false,
+  });
+  const { dataTree, isFetching } = useAppSelector(categorySelector);
 
-  const handleOnToggle = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
+  const handleOnToggle =
+    (open: boolean, isMenu: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
 
-    setOpenMenu(open);
-  };
+      if (isMenu) return setOpen({ menu: open, category: false });
+
+      setOpen({ category: open, menu: false });
+    };
 
   return (
     <>
-      <MenuSideBar open={openMenu} onToggleDrawer={handleOnToggle} />
+      <MenuSideBar
+        dataHome={[
+          { name: 'Trang chủ', path: '/' },
+          { name: 'Blog', path: '/blog' },
+        ]}
+        open={open.menu}
+        onToggleDrawer={handleOnToggle}
+      />
+
+      <MenuSideBarCategory
+        isFetching={isFetching}
+        data={dataTree}
+        open={open.category}
+        onToggleDrawer={handleOnToggle}
+      />
+
       <RootStyle>
         <ToolbarStyle>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             sx={{ flexDirection: 'column' }}
-            onClick={handleOnToggle(true)}
+            onClick={handleOnToggle(true, true)}
           >
             <MenuIcon />
             <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
@@ -84,7 +109,12 @@ export default function BottomAppBar() {
             </Typography>
           </IconButton>
 
-          <IconButton color="inherit" aria-label="open drawer" sx={{ flexDirection: 'column' }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            sx={{ flexDirection: 'column' }}
+            onClick={handleOnToggle(true, false)}
+          >
             <FormatListBulletedIcon />
             <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
               Category

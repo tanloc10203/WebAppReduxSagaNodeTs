@@ -2,7 +2,7 @@ import SuspenseLoader from 'components/SuspenseLoader';
 import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
-const Loader = (Component: any) => (props: any) => {
+export const Loader = (Component: any) => (props: any) => {
   return (
     <Suspense fallback={<SuspenseLoader />}>
       <Component {...props} />
@@ -11,14 +11,6 @@ const Loader = (Component: any) => (props: any) => {
 };
 
 const DashboardLayout = Loader(lazy(() => import('features/dashboard')));
-
-const DashboardApp = Loader(lazy(() => import('features/dashboard/page/DashboardApp')));
-
-const Product = Loader(lazy(() => import('features/dashboard/page/Product')));
-
-const User = Loader(lazy(() => import('features/dashboard/page/User')));
-
-const Blog = Loader(lazy(() => import('features/dashboard/page/Blog')));
 
 const Login = Loader(lazy(() => import('features/auth/pages/Login')));
 
@@ -37,17 +29,10 @@ const HomePage = Loader(lazy(() => import('features/home')));
 const appRoutes = {
   private: [{ path: '/logout', element: Logout, index: true }],
   public: [
-    { path: '/', element: HomePage },
+    { path: '/*', element: HomePage },
     {
       path: '/dashboard/*',
       element: DashboardLayout,
-      index: true,
-      children: [
-        { path: 'app', element: DashboardApp },
-        { path: 'user', element: User },
-        { path: 'products', element: Product },
-        { path: 'blog', element: Blog },
-      ],
     },
     { path: '/login', element: Login },
     { path: '/forgot-password', element: ForgotPassword },

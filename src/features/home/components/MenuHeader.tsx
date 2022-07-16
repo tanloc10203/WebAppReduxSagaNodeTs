@@ -4,7 +4,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   Button,
   Fade,
-  Link,
   List,
   ListItemButton,
   ListItemText,
@@ -17,9 +16,8 @@ import Collapse from '@mui/material/Collapse';
 import { styled } from '@mui/material/styles';
 import { useAppSelector } from 'app/hooks';
 import { categorySelector } from 'features/category/categorySlice';
-import { CategoryAttribute } from 'models';
-import { MouseEvent, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Fragment, MouseEvent, useState } from 'react';
+import CustomLink from './CustomLink';
 
 export interface MenuHeaderProps {}
 
@@ -41,11 +39,10 @@ export default function MenuHeader(props: MenuHeaderProps) {
   const { dataTree, isFetching } = useAppSelector(categorySelector);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const [openChildren, setOpenChildren] = useState<boolean>(false);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    if (Boolean(anchorEl)) setAnchorEl(null);
-
     setAnchorEl(event.currentTarget);
   };
 
@@ -54,6 +51,55 @@ export default function MenuHeader(props: MenuHeaderProps) {
   };
 
   const open = Boolean(anchorEl);
+
+  const loading =
+    isFetching &&
+    [...Array(4)].map((i, idex) => (
+      <ListItemButton key={idex}>
+        <Typography variant="h4">
+          <Skeleton animation="wave" sx={{ pr: 10, pl: 16 }} />
+        </Typography>
+      </ListItemButton>
+    ));
+
+  const children =
+    Boolean(dataTree) &&
+    dataTree.length > 0 &&
+    dataTree.map((item) => {
+      if (!Boolean((item.children?.length as number) > 0))
+        return (
+          <ListItemButton key={item.id}>
+            <CustomLink onClick={handleClose} to={`/category/${item.slug}`}>
+              <ListItemText sx={{ pr: 10 }} primary={item.name} />
+            </CustomLink>
+          </ListItemButton>
+        );
+
+      return (
+        <Fragment key={item.id}>
+          <ListItemButton>
+            <ListItemText
+              sx={{ pr: 10 }}
+              primary={item.name}
+              onClick={() => setOpenChildren(!openChildren)}
+            />
+            {Boolean(item.children) && openChildren ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+
+          <Collapse in={openChildren} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {item.children?.map((c) => (
+                <ListItemButton sx={{ pl: 3 }} key={c.id}>
+                  <CustomLink onClick={handleClose} to={`/category/${c.slug}`}>
+                    <ListItemText primary={c.name} />
+                  </CustomLink>
+                </ListItemButton>
+              ))}
+            </List>
+          </Collapse>
+        </Fragment>
+      );
+    });
 
   return (
     <StackStyle>
@@ -73,11 +119,6 @@ export default function MenuHeader(props: MenuHeaderProps) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={
-          {
-            // onMouseLeave: handleClose,
-          }
-        }
         TransitionComponent={Fade}
       >
         <List
@@ -85,78 +126,9 @@ export default function MenuHeader(props: MenuHeaderProps) {
           component="nav"
           aria-labelledby="nested-list-subheader"
         >
-          {isFetching &&
-            [...Array(4)].map((i) => (
-              <ListItemButton key={i}>
-                <Typography variant="h4">
-                  <Skeleton animation="wave" sx={{ pr: 10, pl: 16 }} />
-                </Typography>
-              </ListItemButton>
-            ))}
+          {loading}
 
-          {Boolean(dataTree) &&
-            dataTree.length > 0 &&
-            dataTree.map((item) => {
-              if (Boolean(item.children) && (item.children as CategoryAttribute[])?.length > 0)
-                return (
-                  <>
-                    <ListItemButton key={item.id}>
-                      {Boolean(item.children) ? (
-                        <>
-                          {' '}
-                          <ListItemText
-                            sx={{ pr: 10 }}
-                            primary={item.name}
-                            onClick={() => Boolean(item.children) && setOpenChildren(!openChildren)}
-                          />
-                          {Boolean(item.children) && openChildren ? <ExpandLess /> : <ExpandMore />}
-                        </>
-                      ) : (
-                        <Link
-                          component={RouterLink}
-                          to={item.slug as string}
-                          style={{ display: 'flex', width: '100%' }}
-                        >
-                          <ListItemText
-                            sx={{ pr: 10 }}
-                            primary={item.name}
-                            onClick={() => Boolean(item.children) && setOpenChildren(!openChildren)}
-                          />
-                          {Boolean(item.children) && openChildren ? <ExpandLess /> : <ExpandMore />}
-                        </Link>
-                      )}
-                    </ListItemButton>
-
-                    <Collapse in={openChildren} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        {item.children?.map((c) => (
-                          <ListItemButton sx={{ pl: 3 }}>
-                            <Link
-                              component={RouterLink}
-                              to={c.slug as string}
-                              style={{ display: 'flex', width: '100%' }}
-                            >
-                              <ListItemText primary={c.name} />
-                            </Link>
-                          </ListItemButton>
-                        ))}
-                      </List>
-                    </Collapse>
-                  </>
-                );
-
-              return (
-                <ListItemButton key={item.id}>
-                  <Link
-                    component={RouterLink}
-                    to={item.slug as string}
-                    style={{ display: 'flex', width: '100%' }}
-                  >
-                    <ListItemText sx={{ pr: 10 }} primary={item.name} />
-                  </Link>
-                </ListItemButton>
-              );
-            })}
+          {children}
         </List>
       </Menu>
 

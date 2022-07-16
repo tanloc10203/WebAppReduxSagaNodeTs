@@ -21,6 +21,15 @@ const RootStyle = styled('div')(({ theme }: any) => ({
   borderBottomLeftRadius: Number(theme.shape.borderRadius) * 2,
   transition: theme.transitions.create('opacity'),
   '&:hover': { opacity: 0.72 },
+  [theme.breakpoints.down('md')]: {
+    display: 'none',
+  },
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
+  },
+  [theme.breakpoints.up('lg')]: {
+    display: 'flex',
+  },
 }));
 
 export default function CartWidget() {

@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';
+import { Loader } from 'routes';
 import { DashboardNavbar, DashboardSidebar } from './components';
-import { Blog, DashboardApp, Product, User } from './page';
 import Category from './page/Category';
 
 const APP_BAR_MOBILE = 64;
@@ -27,9 +27,16 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+const DashboardApp = Loader(lazy(() => import('./page/DashboardApp')));
+
+const Product = Loader(lazy(() => import('./page/Product')));
+
+const User = Loader(lazy(() => import('./page/User')));
+
+const Blog = Loader(lazy(() => import('./page/Blog')));
+
 export default function DashboardLayout() {
   const [open, setOpen] = useState<boolean>(false);
-  //
 
   return (
     <RootStyle>

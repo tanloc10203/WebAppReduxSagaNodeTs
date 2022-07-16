@@ -1,12 +1,13 @@
-import { Box, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { useAppDispatch } from 'app/hooks';
 import { categoryActions } from 'features/category/categorySlice';
 import { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { ProductCartWidget } from 'sections/@dashboard/products';
 import { BottomAppBar, Header } from './components';
 import { BackToTop } from './components/ScrollTop';
+import { CategoryPage, HomePageMain } from './page';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -62,18 +63,10 @@ export default function Home() {
 
         <ProductCartWidget />
 
-        <Box>
-          <Typography textAlign="justify">
-            {[...new Array(100)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
-              )
-              .join('\n')}
-          </Typography>
-        </Box>
+        <Routes>
+          <Route element={<HomePageMain />} index />
+          <Route element={<CategoryPage />} path="category/:slug" />
+        </Routes>
 
         <BackToTop />
 
