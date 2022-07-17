@@ -24,10 +24,13 @@ import 'nprogress/nprogress.css';
 import 'react-awesome-lightbox/build/style.css';
 
 // React toast
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import registerServiceWorker from 'components/registerServiceWorker';
 import 'config/firebase';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Import Swiper styles
+import 'swiper/css';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

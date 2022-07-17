@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+    objectPosition: 'center',
     position: 'absolute',
 
     '&.active': {
@@ -57,10 +58,10 @@ export default function LazyLoadingImg({ url, alt, sx, onHandleClick }: LazyLoad
     <Box
       onClick={onHandleClick as MouseEventHandler<HTMLImageElement> | undefined}
       component="img"
-      sx={sx}
       alt={alt}
       ref={imgRef}
       className={classes.lazyLoading}
+      sx={sx}
     />
   );
 }
