@@ -1,4 +1,13 @@
-import { Card, CardContent, CardMedia, Link, Rating, Stack, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Link,
+  Rating,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Label, LazyLoadingImg } from 'components/Common';
 import { Link as RouterLink } from 'react-router-dom';
 import { fPriceVN } from 'utils';
@@ -57,9 +66,11 @@ export default function SwiperItemCard({ product }: { product: ProductsMock }) {
             </Typography>
           </Stack>
 
-          <Typography variant="subtitle2" noWrap>
-            {name}
-          </Typography>
+          <Tooltip title={name} arrow placement="top">
+            <Typography variant="subtitle2" noWrap>
+              {name}
+            </Typography>
+          </Tooltip>
           <Rating name="read-only" value={3} readOnly />
         </CardContent>
       </Card>

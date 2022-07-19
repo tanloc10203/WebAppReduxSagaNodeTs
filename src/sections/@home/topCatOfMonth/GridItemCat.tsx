@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Link, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Link, Tooltip, Typography } from '@mui/material';
 import { LazyLoadingImg } from 'components/Common';
 import { Link as RouterLink } from 'react-router-dom';
 import { ProductsMock } from '_mock';
@@ -29,9 +29,11 @@ export default function GridItemCat({ product }: GridItemCatProps) {
         </CardMedia>
 
         <CardContent>
-          <Typography variant="subtitle2" noWrap>
-            {name}
-          </Typography>
+          <Tooltip title={name} arrow placement="top">
+            <Typography variant="subtitle2" noWrap>
+              {name}
+            </Typography>
+          </Tooltip>
         </CardContent>
       </Card>
     </Link>

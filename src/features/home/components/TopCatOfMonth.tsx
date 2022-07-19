@@ -10,7 +10,7 @@ export default function TopCatOfMonth(props: TopCatOfMonthProps) {
   return (
     <Box mt={10}>
       <Box mb={2}>
-        <Typography variant="h4" textTransform="capitalize">
+        <Typography variant="h5" textTransform="capitalize">
           Top Categories Of The Month
         </Typography>
       </Box>

@@ -6,3 +6,5 @@ export { default as Banner } from './Banner';
 export { default as Features } from './Features';
 export { default as TopCatOfMonth } from './TopCatOfMonth';
 export { default as DealOfDay } from './DealOfDay';
+export { default as CatSections } from './CatSections';
+export { default as SaleProduct } from './SaleProduct';
