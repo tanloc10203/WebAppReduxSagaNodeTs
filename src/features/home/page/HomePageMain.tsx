@@ -1,5 +1,5 @@
 import { Page } from 'components/Common';
-import { Banner, Features } from '../components';
+import { Banner, Features, TopCatOfMonth, DealOfDay } from '../components';
 
 export interface HomePageMainProps {}
 
@@ -8,6 +8,8 @@ export default function HomePageMain(props: HomePageMainProps) {
     <Page title="Trang chủ">
       <Banner />
       <Features />
+      <DealOfDay />
+      <TopCatOfMonth />
     </Page>
   );
 }

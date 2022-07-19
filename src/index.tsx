@@ -31,6 +31,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Import Swiper styles
 import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

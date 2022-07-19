@@ -55,43 +55,44 @@ export default function MenuSideBarCategory(props: Props) {
       <List>
         {loading}
 
-        {data.map((item, index) => {
-          if (!Boolean((item.children?.length as number) > 0))
+        {Boolean(data) &&
+          data.map((item, index) => {
+            if (!Boolean((item.children?.length as number) > 0))
+              return (
+                <CustomLink component={RouterLink} to={`/category/${item.slug}`} key={index}>
+                  <ListItem onClick={onToggleDrawer(false, false)} disablePadding>
+                    <ListItemButton>
+                      <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  </ListItem>
+                </CustomLink>
+              );
+
             return (
-              <CustomLink component={RouterLink} to={`/category/${item.slug}`} key={index}>
-                <ListItem onClick={onToggleDrawer(false, false)} disablePadding>
-                  <ListItemButton>
+              <Fragment key={index}>
+                <ListItem disablePadding>
+                  <ListItemButton onClick={() => setOpenChildren(!openChildren)}>
                     <ListItemText primary={item.name} />
+                    {openChildren ? <ExpandLess /> : <ExpandMore />}
                   </ListItemButton>
                 </ListItem>
-              </CustomLink>
+
+                <Collapse in={openChildren} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {item.children?.map((c) => (
+                      <CustomLink component={RouterLink} to={`/category/${c.slug}`} key={index}>
+                        <ListItem onClick={onToggleDrawer(false, false)} disablePadding>
+                          <ListItemButton>
+                            <ListItemText primary={c.name} sx={{ pl: 4 }} />
+                          </ListItemButton>
+                        </ListItem>
+                      </CustomLink>
+                    ))}
+                  </List>
+                </Collapse>
+              </Fragment>
             );
-
-          return (
-            <Fragment key={index}>
-              <ListItem disablePadding>
-                <ListItemButton onClick={() => setOpenChildren(!openChildren)}>
-                  <ListItemText primary={item.name} />
-                  {openChildren ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-              </ListItem>
-
-              <Collapse in={openChildren} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {item.children?.map((c) => (
-                    <CustomLink component={RouterLink} to={`/category/${c.slug}`} key={index}>
-                      <ListItem onClick={onToggleDrawer(false, false)} disablePadding>
-                        <ListItemButton>
-                          <ListItemText primary={c.name} sx={{ pl: 4 }} />
-                        </ListItemButton>
-                      </ListItem>
-                    </CustomLink>
-                  ))}
-                </List>
-              </Collapse>
-            </Fragment>
-          );
-        })}
+          })}
       </List>
     </BoxStyles>
   );

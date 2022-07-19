@@ -1,11 +1,7 @@
 import { Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Autoplay, EffectFade, Navigation, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-import { styled } from '@mui/material/styles';
-import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 export interface CarouselProps {}
 

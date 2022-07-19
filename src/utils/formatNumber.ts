@@ -22,3 +22,7 @@ export function fShortenNumber(number: number) {
 export function fData(number: number) {
   return numeral(number).format('0.0 b');
 }
+
+export function fPriceVN(number: number) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+}
