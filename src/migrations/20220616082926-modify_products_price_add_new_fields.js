@@ -11,42 +11,23 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(
         'ProductPrices', // table name
-        'priceBeforeDiscount', // new field name
+        'isSale', // new field name
         {
-          type: Sequelize.REAL,
-          allowNull: true,
+          type: Sequelize.BOOLEAN,
         },
       ),
       queryInterface.addColumn(
         'ProductPrices', // table name
-        'priceMax', // new field name
+        'percentDiscount', // new field name
         {
           type: Sequelize.REAL,
-          allowNull: true,
         },
       ),
       queryInterface.addColumn(
         'ProductPrices', // table name
-        'priceMaxBeforeDiscount', // new field name
+        'priceDiscount', // new field name
         {
           type: Sequelize.REAL,
-          allowNull: true,
-        },
-      ),
-      queryInterface.addColumn(
-        'ProductPrices', // table name
-        'priceMin', // new field name
-        {
-          type: Sequelize.REAL,
-          allowNull: true,
-        },
-      ),
-      queryInterface.addColumn(
-        'ProductPrices', // table name
-        'priceMinBeforeDiscount', // new field name
-        {
-          type: Sequelize.REAL,
-          allowNull: true,
         },
       ),
     ]);
@@ -60,11 +41,9 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
     return Promise.all([
-      queryInterface.removeColumn('ProductPrices', 'priceBeforeDiscount'),
-      queryInterface.removeColumn('ProductPrices', 'priceMax'),
-      queryInterface.removeColumn('ProductPrices', 'priceMaxBeforeDiscount'),
-      queryInterface.removeColumn('ProductPrices', 'priceMin'),
-      queryInterface.removeColumn('ProductPrices', 'priceMinBeforeDiscount'),
+      queryInterface.removeColumn('ProductPrices', 'isSale'),
+      queryInterface.removeColumn('ProductPrices', 'percentDiscount'),
+      queryInterface.removeColumn('ProductPrices', 'priceDiscount'),
     ]);
   }
 };

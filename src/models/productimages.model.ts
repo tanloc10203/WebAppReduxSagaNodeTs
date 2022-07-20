@@ -4,15 +4,15 @@ import { Association, DataTypes, Model } from 'sequelize';
 import { Sequelize } from 'sequelize/types';
 import { Product, ProductAttribute } from './product.model';
 
-export interface ProductTempAttribute {
+export interface ProductImagesAttribute {
   id?: number;
+  urlImg: string;
   productId: number;
   createdAt?: string;
   updatedAt?: string;
-  products?: ProductAttribute;
 }
 
-export class ProductTemp extends Model implements ProductTempAttribute {
+export class ProductImages extends Model implements ProductImagesAttribute {
   /**
    * Helper method for defining associations.
    * This method is not a part of Sequelize lifecycle.
@@ -21,26 +21,28 @@ export class ProductTemp extends Model implements ProductTempAttribute {
 
   public id?: number;
   public productId!: number;
+  public urlImg!: string;
 
   public readonly createdAt?: string | undefined;
   public readonly updatedAt?: string | undefined;
 
-  public readonly product?: Product[];
-
   public static associations: {
     // define association here
-    product: Association<ProductTemp, Product>;
+    product: Association<ProductImages, Product>;
   };
 }
 
-export function initProductTemp(sequelize: Sequelize): void {
-  ProductTemp.init(
+export function initProductImages(sequelize: Sequelize): void {
+  ProductImages.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
+      },
+      urlImg: {
+        type: DataTypes.STRING,
       },
       productId: {
         type: DataTypes.INTEGER,
@@ -51,11 +53,11 @@ export function initProductTemp(sequelize: Sequelize): void {
     },
     {
       sequelize,
-      modelName: 'ProductTemp',
+      modelName: 'ProductImages',
     }
   );
 }
 
-export function associateProductTemp(): void {
-  ProductTemp.belongsTo(Product, { targetKey: 'id', foreignKey: 'productId', as: 'products' });
+export function associateProductImages(): void {
+  ProductImages.belongsTo(Product, { targetKey: 'id', foreignKey: 'productId', as: 'images' });
 }

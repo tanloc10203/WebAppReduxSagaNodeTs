@@ -205,12 +205,12 @@ export class Product extends CommonController {
         return res.status(200).json({
           message: 'GET ALL SUCCEED',
           error: false,
-          timeGet: new Date().toLocaleDateString(),
+          dayGet: new Date().toLocaleDateString(),
           data: response,
         });
       }
 
-      const data = await db.ProductTemp.findAll({
+      const responseTemp = await db.ProductTemp.findAll({
         attributes: ['id'],
         include: {
           model: db.Product,
@@ -241,11 +241,17 @@ export class Product extends CommonController {
         },
       });
 
-      return res.status(200).json({
+      const data = responseTemp as unknown as Array<ProductTempAttribute>;
+
+      const arrProduct: Array<ProductTempAttribute> = data.map(
+        (item): ProductTempAttribute => item.products as ProductTempAttribute
+      );
+
+      res.status(200).json({
         message: 'GET ALL SUCCEED',
         error: false,
-        timeGet: new Date().toLocaleDateString(),
-        data: data,
+        dayGet: dayClient,
+        data: arrProduct,
       });
     } catch (error) {
       log.error(error);

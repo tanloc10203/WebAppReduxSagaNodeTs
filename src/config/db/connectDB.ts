@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { associateCategory, initCategory } from '../../models/category.model';
 import { associateMember, initMember } from '../../models/member.model';
 import { associateProduct, initProduct } from '../../models/product.model';
+import { associateProductImages, initProductImages } from '../../models/productimages.model';
 import { associateProductPrice, initProductPrice } from '../../models/productprice.model';
 import { associateProductTemp, initProductTemp } from '../../models/producttemp.model';
 import { associateSession, initSession } from '../../models/session.model';
@@ -36,6 +37,7 @@ initStatusProduct(sequelize);
 initProduct(sequelize);
 initProductPrice(sequelize);
 initProductTemp(sequelize);
+initProductImages(sequelize);
 
 associateMember();
 associateSession();
@@ -45,6 +47,7 @@ associateProduct();
 associateTimeChange();
 associateProductPrice();
 associateProductTemp();
+associateProductImages();
 
 export const db = {
   sequelize,
@@ -57,6 +60,7 @@ export const db = {
   ProductPrice: sequelize.models.ProductPrice,
   TimeChange: sequelize.models.TimeChange,
   ProductTemp: sequelize.models.ProductTemp,
+  ProductImages: sequelize.models.ProductImages,
 };
 
 export const connectDB = async () => {

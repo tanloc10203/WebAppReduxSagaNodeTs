@@ -101,4 +101,9 @@ export function associateProduct(): void {
     foreignKey: 'productId',
     as: 'productTemps',
   });
+  Product.hasMany(ProductTemp, {
+    sourceKey: 'id',
+    foreignKey: 'productId',
+    as: 'productImages',
+  });
 }
