@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { useAppDispatch } from 'app/hooks';
@@ -5,7 +6,7 @@ import { categoryActions } from 'features/category/categorySlice';
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ProductCartWidget } from 'sections/@dashboard/products';
-import { BottomAppBar, Header } from './components';
+import { BottomAppBar, CopyRight, Footer, Header } from './components';
 import { BackToTop } from './components/ScrollTop';
 import { CategoryPage, HomePageMain } from './page';
 
@@ -29,17 +30,18 @@ const MainStyle = styled('div')(({ theme }) => ({
   overflow: 'auto',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
-  paddingBottom: theme.spacing(10),
+  paddingBottom: theme.spacing(0),
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(0, 2, 15, 2),
+    padding: theme.spacing(0, 2, 10, 2),
   },
   [theme.breakpoints.up('md')]: {
-    padding: theme.spacing(0, 2, 15, 2),
+    padding: theme.spacing(0, 2, 10, 2),
   },
   [theme.breakpoints.up('lg')]: {
     paddingTop: APP_BAR_DESKTOP + 24,
     paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(4),
+    paddingBottom: theme.spacing(0),
   },
 }));
 
@@ -71,6 +73,12 @@ export default function Home() {
         <BackToTop />
 
         <BottomAppBar />
+
+        <Footer />
+
+        <Divider sx={{ mt: 10 }} component="div" variant="fullWidth" />
+
+        <CopyRight />
       </MainStyle>
     </RootStyle>
   );

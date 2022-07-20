@@ -12,6 +12,7 @@ export default function CatHead(props: CatHeadProps) {
         alignItems="center"
         bgcolor="#eee"
         p="12px"
+        flexWrap="wrap"
       >
         <Typography variant="h5">Danh mục</Typography>
 
