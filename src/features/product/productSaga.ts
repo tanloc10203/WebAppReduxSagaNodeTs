@@ -63,12 +63,29 @@ function* fetchProduct({ payload }: PayloadAction<FilterPayload>) {
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log(error);
       if (error.response?.status)
         yield put(productActions.fetchProductFailed(error.response.data?.message));
       else yield put(productActions.fetchProductFailed(error.message));
     } else if (error instanceof Error) {
       yield put(productActions.fetchProductFailed(error.message));
+    }
+  }
+}
+
+function* fetchRandomProduct({ payload }: PayloadAction<FilterPayload>) {
+  try {
+    const response: ListResponse<ProductAttribute> = yield call(productApi.getRandom);
+
+    if (!response.error) {
+      yield put(productActions.fetchRandomProductSucceed(response));
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status)
+        yield put(productActions.fetchRandomProductFailed(error.response.data?.message));
+      else yield put(productActions.fetchRandomProductFailed(error.message));
+    } else if (error instanceof Error) {
+      yield put(productActions.fetchRandomProductFailed(error.message));
     }
   }
 }
@@ -85,6 +102,15 @@ function* watchFetchProduct() {
   yield takeLatest(productActions.fetchProductStart.type, fetchProduct);
 }
 
+function* watchFetchRandomProduct() {
+  yield takeLatest(productActions.fetchRandomProductStart.type, fetchRandomProduct);
+}
+
 export default function* productSaga() {
-  yield all([watchFetchProduct(), watchFetchProductCreate(), watchFetchProductUpdate()]);
+  yield all([
+    watchFetchProduct(),
+    watchFetchProductCreate(),
+    watchFetchProductUpdate(),
+    watchFetchRandomProduct(),
+  ]);
 }

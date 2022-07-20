@@ -19,6 +19,10 @@ const productApi = {
   getById(id: number): Promise<ListResponse<ProductAttribute>> {
     return axiosClient.get(`${productApi.name}/${id}`);
   },
+
+  getRandom(params?: FilterPayload): Promise<ListResponse<ProductAttribute>> {
+    return axiosClient.get(productApi.name + '/collections', { params });
+  },
 };
 
 export default productApi;

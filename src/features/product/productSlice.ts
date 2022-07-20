@@ -76,6 +76,21 @@ const productSlice = createSlice({
       state.data = [];
       toast.error(state.error);
     },
+
+    // * FETCH RANDOM PRODUCT
+    fetchRandomProductStart(state) {
+      state.isFetching = true;
+    },
+    fetchRandomProductSucceed(state, { payload }: PayloadAction<ListResponse<ProductAttribute>>) {
+      state.isFetching = false;
+      state.data = payload.data as Array<ProductAttribute>;
+    },
+    fetchRandomProductFailed(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+      state.isFetching = false;
+      state.data = [];
+      toast.error(state.error);
+    },
   },
 });
 

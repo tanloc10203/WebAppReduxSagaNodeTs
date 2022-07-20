@@ -1,9 +1,11 @@
 import { Box } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+import { useAppSelector } from 'app/hooks';
+import SkeletonCustom from 'components/Skeleton';
+import { productSelector } from 'features/product/productSlice';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { products } from '_mock';
 import SwiperItemCard from './SwiperItemCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function ContentDealOfDay() {
-  const data = products;
+  const { data, isFetching } = useAppSelector(productSelector);
   const classes = useStyles();
 
   return (
@@ -50,13 +52,20 @@ export default function ContentDealOfDay() {
         modules={[Pagination]}
         className={classes.swiper}
       >
-        {data.map((item, i) => {
-          return (
-            <SwiperSlide key={i}>
-              <SwiperItemCard product={item} />
+        {Boolean(data) &&
+          data.map((item, i) => {
+            return (
+              <SwiperSlide key={i}>
+                <SwiperItemCard product={item} />
+              </SwiperSlide>
+            );
+          })}
+        {isFetching &&
+          [...Array(6)].map((_, index) => (
+            <SwiperSlide key={index}>
+              <SkeletonCustom />
             </SwiperSlide>
-          );
-        })}
+          ))}
       </Swiper>
     </Box>
   );
