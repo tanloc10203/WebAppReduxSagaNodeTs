@@ -84,4 +84,12 @@ export class DbQuery {
   public getDb() {
     return this.Db;
   }
+
+  public hasOneDayPassed(dateInput: string) {
+    const date = new Date().toLocaleDateString();
+
+    if (dateInput === date) return false;
+
+    return true;
+  }
 }

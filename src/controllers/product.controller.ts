@@ -13,12 +13,16 @@ export const productController = {
     return productController.db.getAll(req, res);
   },
 
-  update(req: Request, res: Response) {
-    return productController.db.update(req, res);
-  },
-
   getById(req: Request, res: Response) {
     return productController.db.getById(req, res);
+  },
+
+  getCollections(req: Request, res: Response) {
+    return productController.db.getCollections(req, res);
+  },
+
+  update(req: Request, res: Response) {
+    return productController.db.update(req, res);
   },
 
   delete(req: Request, res: Response) {

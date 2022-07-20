@@ -4,6 +4,7 @@ import { Association, DataTypes, Model } from 'sequelize';
 import { Sequelize } from 'sequelize/types';
 import { Category } from './category.model';
 import { ProductPrice } from './productprice.model';
+import { ProductTemp } from './producttemp.model';
 import { StatusProduct } from './statusproduct.model';
 
 export interface ProductAttribute {
@@ -94,5 +95,10 @@ export function associateProduct(): void {
     sourceKey: 'id',
     foreignKey: 'productId',
     as: 'price',
+  });
+  Product.hasMany(ProductTemp, {
+    sourceKey: 'id',
+    foreignKey: 'productId',
+    as: 'productTemps',
   });
 }

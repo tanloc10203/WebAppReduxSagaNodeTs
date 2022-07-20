@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
+import { Sequelize } from 'sequelize';
 import { Model, ModelCtor } from 'sequelize/types';
 import { CommonController } from '../class';
 import { db } from '../config/db';
 import log from '../logger';
 import { ProductAttribute } from '../models/product.model';
-import { StatusProductAttribute } from '../models/statusproduct.model';
+import { ProductTempAttribute } from '../models/producttemp.model';
 import { FilterPayload } from '../utils';
 
 export class Product extends CommonController {
@@ -144,6 +145,107 @@ export class Product extends CommonController {
         error: false,
         data: response.rows,
         pagination: { _limit: _limit, _page: _page + 1, _totalRows: response.count },
+      });
+    } catch (error) {
+      log.error(error);
+      if (error instanceof Error)
+        return res.status(500).json({ message: 'ERROR FROM SERVER!!!', error: error.message });
+    }
+  }
+
+  public async getCollections(req: Request, res: Response) {
+    try {
+      let limit = parseInt(req.query._limit as string);
+      let dayClient = req.query._day;
+
+      if (!Boolean(limit)) {
+        limit = 10;
+      }
+
+      if (!dayClient || dayClient === null || super.hasOneDayPassed(dayClient as string)) {
+        const response = await super.handleGetAll({
+          order: [Sequelize.fn('random')],
+          limit: limit,
+          include: [
+            {
+              model: db.Category,
+              as: 'categories',
+              attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: db.StatusProduct,
+              as: 'status',
+              attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: db.ProductPrice,
+              as: 'price',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+          ],
+        });
+
+        await db.ProductTemp.destroy({ truncate: true });
+
+        const data = response as Array<ProductAttribute>;
+
+        const arrProductId: Array<ProductTempAttribute> = data.map(
+          (item): ProductTempAttribute => ({ productId: item.id as number })
+        );
+
+        // @ts-ignore
+        await db.ProductTemp.bulkCreate(arrProductId);
+
+        return res.status(200).json({
+          message: 'GET ALL SUCCEED',
+          error: false,
+          timeGet: new Date().toLocaleDateString(),
+          data: response,
+        });
+      }
+
+      const data = await db.ProductTemp.findAll({
+        attributes: ['id'],
+        include: {
+          model: db.Product,
+          as: 'products',
+          include: [
+            {
+              model: db.Category,
+              as: 'categories',
+              attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: db.StatusProduct,
+              as: 'status',
+              attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt'],
+              },
+            },
+            {
+              model: db.ProductPrice,
+              as: 'price',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt'],
+              },
+            },
+          ],
+        },
+      });
+
+      return res.status(200).json({
+        message: 'GET ALL SUCCEED',
+        error: false,
+        timeGet: new Date().toLocaleDateString(),
+        data: data,
       });
     } catch (error) {
       log.error(error);
