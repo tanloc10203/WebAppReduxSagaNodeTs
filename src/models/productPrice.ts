@@ -2,13 +2,10 @@ export interface ProductPriceAttribute {
   id?: number;
 
   price: number;
-  priceBeforeDiscount?: number;
+  isSale: boolean;
 
-  priceMax?: number;
-  priceMaxBeforeDiscount?: number;
-
-  priceMin?: number;
-  priceMinBeforeDiscount?: number;
+  percentDiscount: number;
+  priceDiscount: number;
 
   productId?: number;
   timeChangeId?: number;

@@ -1,4 +1,10 @@
-import { FilterPayload, ListResponse, ProductAttribute } from 'models';
+import {
+  FilterPayload,
+  ListResponse,
+  ListResponseRandom,
+  ParamGetRandom,
+  ProductAttribute,
+} from 'models';
 import axiosClient from './axiosClient';
 
 const productApi = {
@@ -20,7 +26,7 @@ const productApi = {
     return axiosClient.get(`${productApi.name}/${id}`);
   },
 
-  getRandom(params?: FilterPayload): Promise<ListResponse<ProductAttribute>> {
+  getRandom(params: ParamGetRandom): Promise<ListResponseRandom<ProductAttribute>> {
     return axiosClient.get(productApi.name + '/collections', { params });
   },
 };

@@ -1,7 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { productApi } from 'api';
 import { AxiosError } from 'axios';
-import { FilterPayload, ListResponse, ProductAttribute } from 'models';
+import {
+  FilterPayload,
+  ListResponse,
+  ListResponseRandom,
+  ParamGetRandom,
+  ProductAttribute,
+} from 'models';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { history } from 'utils';
 import { productActions } from './productSlice';
@@ -13,7 +19,7 @@ function* fetchProductCreate({ payload }: PayloadAction<ProductAttribute>) {
     if (!response.error) {
       const filters: FilterPayload = {
         _page: 1,
-        _limit: 5,
+        _limit: 7,
       };
       yield put(productActions.fetchProductCreateSucceed());
       yield put(productActions.setFilterProduct(filters));
@@ -37,7 +43,7 @@ function* fetchProductUpdate({ payload }: PayloadAction<ProductAttribute>) {
     if (!response.error) {
       const filters: FilterPayload = {
         _page: 1,
-        _limit: 5,
+        _limit: 7,
       };
       yield put(productActions.fetchProductUpdateSucceed());
       yield put(productActions.setFilterProduct(filters));
@@ -72,11 +78,15 @@ function* fetchProduct({ payload }: PayloadAction<FilterPayload>) {
   }
 }
 
-function* fetchRandomProduct({ payload }: PayloadAction<FilterPayload>) {
+function* fetchRandomProduct({ payload }: PayloadAction<ParamGetRandom>) {
   try {
-    const response: ListResponse<ProductAttribute> = yield call(productApi.getRandom);
+    const response: ListResponseRandom<ProductAttribute> = yield call(
+      productApi.getRandom,
+      payload
+    );
 
     if (!response.error) {
+      localStorage.setItem('dayGet', response.dayGet);
       yield put(productActions.fetchRandomProductSucceed(response));
     }
   } catch (error) {

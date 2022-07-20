@@ -50,8 +50,8 @@ export function SelectField({
         label={label}
         inputProps={inputProps}
       >
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+        {options.map((option, i) => (
+          <MenuItem key={i} value={option.value}>
             {option.label}
           </MenuItem>
         ))}

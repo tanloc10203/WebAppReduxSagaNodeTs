@@ -5,22 +5,30 @@ import {
   FilterPayload,
   ListResponse,
   PaginationParams,
+  ParamGetRandom,
   ProductAttribute,
 } from 'models';
 import { toast } from 'react-toastify';
 
-const initialState: FetchDataStateSlice<ProductAttribute> = {
+interface ProductState extends FetchDataStateSlice<ProductAttribute> {
+  paramGetRandom: ParamGetRandom;
+}
+
+const initialState: ProductState = {
   error: '',
   isFetching: false,
   data: [],
   filters: {
-    _limit: 5,
+    _limit: 7,
     _page: 1,
   },
   pagination: {
-    _limit: 5,
+    _limit: 7,
     _page: 1,
     _totalRows: 15,
+  },
+  paramGetRandom: {
+    _day: null || localStorage.getItem('dayGet'),
   },
 };
 
@@ -78,7 +86,7 @@ const productSlice = createSlice({
     },
 
     // * FETCH RANDOM PRODUCT
-    fetchRandomProductStart(state) {
+    fetchRandomProductStart(state, action: PayloadAction<ParamGetRandom>) {
       state.isFetching = true;
     },
     fetchRandomProductSucceed(state, { payload }: PayloadAction<ListResponse<ProductAttribute>>) {

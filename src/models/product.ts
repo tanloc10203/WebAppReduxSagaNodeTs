@@ -1,10 +1,12 @@
 import { CategoryAttribute, ProductPriceAttribute } from 'models';
 
+export type KeyStatusProduct = 'process' | 'hide' | 'show';
+
 export interface StatusProduct {
   id: number;
 
   name: string;
-  key: 'process' | 'hide' | 'show';
+  key: KeyStatusProduct;
 
   createdAt?: Date;
   updatedAt?: Date;

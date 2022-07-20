@@ -18,7 +18,7 @@ function* fetchCreateProductPrice({ payload }: PayloadAction<ProductPriceAttribu
     if (!response.error) {
       const filters: FilterPayload = {
         _page: 1,
-        _limit: 5,
+        _limit: 7,
       };
       yield put(productActions.setFilterProduct(filters));
       yield put(productPriceActions.fetchCreateSucceed());
@@ -46,7 +46,7 @@ function* fetchUpdateProductPrice({ payload }: PayloadAction<ProductPriceAttribu
     if (!response.error) {
       const filters: FilterPayload = {
         _page: 1,
-        _limit: 5,
+        _limit: 7,
       };
       yield put(productPriceActions.fetchCreateSucceed());
       yield put(productActions.setFilterProduct(filters));

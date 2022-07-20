@@ -21,7 +21,7 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ProductAttribute } from 'models';
 import { useState } from 'react';
-import { fCurrency, fDate } from 'utils';
+import { fDate, fPriceVN } from 'utils';
 
 export interface DialogProductProps {
   product: ProductAttribute;
@@ -95,7 +95,22 @@ export default function DialogProduct(props: DialogProductProps) {
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>
-                {fCurrency(product.price?.price as number) + ' VNĐ'}
+                <Typography variant="subtitle1" color="green">
+                  {product.price?.isSale
+                    ? fPriceVN(product.price.priceDiscount)
+                    : fPriceVN(product.price?.price as number)}
+                  &nbsp;&nbsp;
+                  <Typography
+                    component="span"
+                    variant="body1"
+                    sx={{
+                      color: 'text.disabled',
+                      textDecoration: 'line-through',
+                    }}
+                  >
+                    {product.price?.isSale && fPriceVN(product.price?.price as number)}
+                  </Typography>
+                </Typography>
                 <IconButton aria-label="add to favorites">
                   <FavoriteIcon />
                 </IconButton>

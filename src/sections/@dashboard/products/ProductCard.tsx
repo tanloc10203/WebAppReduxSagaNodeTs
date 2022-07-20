@@ -2,7 +2,7 @@ import { Avatar, Box, Card, Grid, Link, Typography } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import { LazyLoadingImg, SvgIconStyle } from 'components/Common';
-import { ProductAttribute } from 'models';
+import { KeyStatusProduct, ProductAttribute } from 'models';
 import { useState } from 'react';
 import DialogProduct from './DialogProduct';
 
@@ -50,7 +50,7 @@ const InfoStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function ShopProductCard({ product, index }: ShopProductCardProps) {
-  const { name, thumb, id, price, createdAt } = product;
+  const { name, thumb, id, price, createdAt, status } = product;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
   const classes = useStyles();
@@ -118,7 +118,11 @@ export default function ShopProductCard({ product, index }: ShopProductCardProps
                 }),
               }}
             >
-              <ProductMoreMenu productId={id as number} priceId={price?.id as number} />
+              <ProductMoreMenu
+                status={status?.key as KeyStatusProduct}
+                productId={id as number}
+                priceId={price?.id as number}
+              />
             </AvatarStyle>
 
             <LazyLoadingImg alt={name as string} url={thumb as string} />

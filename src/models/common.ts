@@ -37,6 +37,16 @@ export interface ListResponse<T> {
   pagination?: PaginationParams;
 }
 
+export interface ListResponseRandom<T> extends ListResponse<T> {
+  dayGet: string;
+}
+
+export interface ParamGetRandom {
+  _day: null | string;
+
+  [key: string]: any;
+}
+
 export interface PayloadFetchMember {
   accessToken: string;
   axiosJwt: AxiosInstance;

@@ -2,20 +2,31 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { CircularProgress } from '@material-ui/core';
 import { Box, Button, Grid } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
-import { TextFieldCustomNumber } from 'components/FormFields';
+import { InputField, SelectField, TextFieldCustomNumber } from 'components/FormFields';
 import { isFetchingProductPriceSelector } from 'features/productPrice/productPriceSlice';
 import { ProductPriceAttribute } from 'models';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 export interface ProductPriceUpdateFormProps {
-  initialValues?: ProductPriceAttribute;
+  initialValues?: Omit<ProductPriceAttribute, 'priceDiscount'>;
   onSubmit?: (values: ProductPriceAttribute) => Promise<unknown>;
 }
 
 const productPriceFormAddSchema = yup
   .object({
     price: yup.number().required().positive().min(1000),
+    isSale: yup.boolean().required(),
+    percentDiscount: yup
+      .number()
+      .min(0)
+      .max(100)
+      .required()
+      .when('isSale', {
+        is: true,
+        then: yup.number().min(0.1).max(100).required(),
+        otherwise: yup.number().min(0).max(100).notRequired(),
+      }),
   })
   .required();
 
@@ -35,7 +46,12 @@ export function ProductPageAddEditPriceForm(props: ProductPriceUpdateFormProps) 
   const handleOnSubmit = async (values: ProductPriceAttribute) => {
     if (!onSubmit) return;
 
-    await onSubmit?.(values);
+    const newValues = {
+      ...values,
+      priceDiscount: values.price - values.price * (values.percentDiscount / 100),
+    };
+
+    await onSubmit?.(newValues);
   };
 
   const loading = isSubmitting ? true : isFetching ? true : false;
@@ -53,34 +69,26 @@ export function ProductPageAddEditPriceForm(props: ProductPriceUpdateFormProps) 
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextFieldCustomNumber
-            name="priceBeforeDiscount"
+          <SelectField
+            name="isSale"
             control={control}
-            label="Price Before Discount"
+            label="Discount"
+            options={[
+              { label: 'Yes', value: 'true' },
+              { label: 'No', value: 'false' },
+            ]}
           />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextFieldCustomNumber name="priceMax" control={control} label="Price Max" />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextFieldCustomNumber
-            name="priceMaxBeforeDiscount"
+          <InputField
+            name="percentDiscount"
             control={control}
-            label="Price Max Before Discount"
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextFieldCustomNumber name="priceMin" control={control} label="Price Min" />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextFieldCustomNumber
-            name="priceMinBeforeDiscount"
-            control={control}
-            label="Price Min Before Discount"
+            label="Percent Discount"
+            defaultValue={0}
+            type="number"
+            minLength={0}
+            maxLength={100}
           />
         </Grid>
       </Grid>

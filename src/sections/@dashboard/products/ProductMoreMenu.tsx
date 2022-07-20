@@ -7,6 +7,7 @@ import {
   SpeedDialIcon,
 } from '@mui/material';
 import { Iconify } from 'components/Common';
+import { KeyStatusProduct } from 'models';
 import { ElementType, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { MenuItemState } from '../category';
@@ -14,9 +15,10 @@ import { MenuItemState } from '../category';
 export interface ProductMoreMenuProps {
   productId: number;
   priceId: number;
+  status: KeyStatusProduct;
 }
 
-export default function ProductMoreMenu({ productId, priceId }: ProductMoreMenuProps) {
+export default function ProductMoreMenu({ status, productId, priceId }: ProductMoreMenuProps) {
   const ref = useRef<null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -43,12 +45,26 @@ export default function ProductMoreMenu({ productId, priceId }: ProductMoreMenuP
       icon: 'material-symbols:price-check-rounded',
       title: 'Update Price',
     },
+    {
+      // path: '/dashboard/products/update/price/' + productId + '/' + priceId,
+      // component: RouterLink,
+      icon: 'bx:image-add',
+      title: 'Add List Image',
+    },
   ];
+
+  const checkColor = status === 'show' ? { color: 'text.secondary' } : { color: 'white' };
+  const checkBg =
+    status === 'show'
+      ? { background: 'text.secondary' }
+      : status === 'hide'
+      ? { background: '#FF4949' }
+      : { background: '#FFCD38' };
 
   return (
     <>
-      <IconButton ref={ref} onClick={() => setIsOpen(true)}>
-        <SpeedDialIcon sx={{ color: 'black' }} />
+      <IconButton sx={checkBg} ref={ref} onClick={() => setIsOpen(true)}>
+        <SpeedDialIcon sx={checkColor} />
       </IconButton>
 
       <Menu

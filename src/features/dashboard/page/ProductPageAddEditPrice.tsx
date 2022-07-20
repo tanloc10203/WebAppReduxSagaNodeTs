@@ -55,8 +55,10 @@ export default function ProductPageAddEditPrice() {
     })();
   }, [priceId]);
 
-  const initialValues: ProductPriceAttribute = {
+  const initialValues: Omit<ProductPriceAttribute, 'priceDiscount'> = {
     price: 0,
+    isSale: false,
+    percentDiscount: 0,
     ...selectedPrice,
   };
 
@@ -71,10 +73,13 @@ export default function ProductPageAddEditPrice() {
                 productId: +productId,
                 timeChangeId: -1,
               };
+              console.log(newValues);
               dispatch(productPriceActions.fetchCreateStart(newValues));
             } else {
+              console.log('check', values);
               dispatch(productPriceActions.fetchUpdateStart(values));
             }
+
             resolve(true);
           }
         }, 300);

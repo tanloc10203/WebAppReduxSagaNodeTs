@@ -1,7 +1,7 @@
 import { Divider } from '@mui/material';
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Page } from 'components/Common';
-import { productActions } from 'features/product/productSlice';
+import { productActions, productSelector } from 'features/product/productSlice';
 import { useEffect } from 'react';
 import {
   Banner,
@@ -15,11 +15,12 @@ import {
 export interface HomePageMainProps {}
 
 export default function HomePageMain(props: HomePageMainProps) {
+  const { paramGetRandom } = useAppSelector(productSelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(productActions.fetchRandomProductStart());
-  }, [dispatch]);
+    dispatch(productActions.fetchRandomProductStart(paramGetRandom));
+  }, [dispatch, paramGetRandom]);
 
   return (
     <Page title="Trang chủ">
