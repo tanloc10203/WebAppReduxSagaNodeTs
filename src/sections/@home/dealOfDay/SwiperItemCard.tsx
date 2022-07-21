@@ -16,8 +16,6 @@ import { fPriceVN } from 'utils';
 export default function SwiperItemCard({ product }: { product: ProductAttribute }) {
   const { name, price, thumb } = product;
 
-  console.log(price);
-
   return (
     <Link
       component={RouterLink}
@@ -31,45 +29,41 @@ export default function SwiperItemCard({ product }: { product: ProductAttribute 
           maxWidth: 400,
         }}
       >
-        <CardMedia sx={{ width: '100%', height: 180, position: 'relative' }}>
-          {/* {status && (
-            <Label
-              variant="filled"
-              color={(status === 'sale' && 'error') || 'info'}
-              sx={{
-                zIndex: 9,
-                top: 16,
-                right: 16,
-                position: 'absolute',
-                textTransform: 'uppercase',
-              }}
-            >
-              {status}
-            </Label>
-          )} */}
-          <LazyLoadingImg url={thumb as string} />
+        <CardMedia sx={{ width: '100%', height: 200, position: 'relative' }}>
+          <LazyLoadingImg
+            url={thumb as string}
+            sx={{ transition: 'all 0.3s ease-in-out', '&:hover': { transform: 'scale(1.1)' } }}
+          />
         </CardMedia>
 
         <CardContent>
-          <Stack flexDirection="row" justifyContent="space-between">
-            <Typography variant="subtitle1" color="green">
-              {fPriceVN(price?.price as number)}
-              &nbsp;&nbsp;
-              <Typography
-                component="span"
-                variant="body1"
-                sx={{
-                  color: 'text.disabled',
-                  textDecoration: 'line-through',
-                }}
-              >
-                {/* {priceSale && fPriceVN(priceSale)} */}
-              </Typography>
+          <Stack flexDirection="row" alignItems="center">
+            <Typography
+              fontSize={15}
+              variant="subtitle1"
+              color={price?.isSale ? '#3EC70B' : 'green'}
+            >
+              {price?.isSale ? fPriceVN(price?.priceDiscount) : fPriceVN(price?.price as number)}
             </Typography>
+            {price?.isSale && (
+              <Typography fontSize={16} variant="subtitle1" color="#f30">
+                &nbsp;&nbsp;{price.isSale && '-' + price.percentDiscount + '%'}
+              </Typography>
+            )}
           </Stack>
 
           <Tooltip title={name as string} arrow placement="top">
-            <Typography variant="subtitle2" noWrap>
+            <Typography
+              variant="subtitle2"
+              color="#555"
+              noWrap
+              sx={{
+                transition: 'color 0.3s ease-in-out 0s',
+                '&:hover': {
+                  color: 'blue',
+                },
+              }}
+            >
               {name}
             </Typography>
           </Tooltip>

@@ -65,7 +65,8 @@ export default function Banner(props: CarouselProps) {
             <SwiperSlide key={i}>
               <ImgStyle
                 loading="lazy"
-                src={`https://swiperjs.com/demos/images/nature-${i + 1}.jpg`}
+                srcSet={`/static/mock-images/banner/banner-${i + 1}.jpg`}
+                src={`/static/mock-images/banner/banner-${i + 1}.jpg`}
               />
             </SwiperSlide>
           ))}
@@ -77,14 +78,16 @@ export default function Banner(props: CarouselProps) {
           <Grid item lg={12} md={6} sm={6} xs={6}>
             <ImgStyleSideRight
               loading="lazy"
-              src="https://swiperjs.com/demos/images/nature-3.jpg"
+              srcSet="/static/mock-images/banner/banner-5.jpg"
+              src="/static/mock-images/banner/banner-5.jpg"
             />
           </Grid>
 
           <Grid item lg={12} md={6} sm={6} xs={6}>
             <ImgStyleSideRight
               loading="lazy"
-              src="https://swiperjs.com/demos/images/nature-4.jpg"
+              srcSet="/static/mock-images/banner/banner-6.jpg"
+              src="/static/mock-images/banner/banner-6.jpg"
             />
           </Grid>
         </Grid>

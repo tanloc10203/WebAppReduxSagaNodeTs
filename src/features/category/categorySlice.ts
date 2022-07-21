@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 interface CategoryState extends FetchDataStateSlice<CategoryAttribute> {
   dataTree: Array<CategoryAttribute>;
+  dataProduct: Array<CategoryAttribute>;
 }
 
 const initialState: CategoryState = {
@@ -13,6 +14,7 @@ const initialState: CategoryState = {
   isFetching: false,
   data: [],
   dataTree: [],
+  dataProduct: [],
   filters: {
     _order: 'ASC',
     _name: 'id',
@@ -47,12 +49,21 @@ const categorySlice = createSlice({
       toast.error('GET CATEGORY: ' + state.error);
     },
 
-    // * FETCH CATEGORY
+    // * FETCH CATEGORY TREE
     fetchCategoryTreeStart(state) {
       state.isFetching = true;
     },
     fetchCategoryTreeSucceed(state, action: PayloadAction<ListResponse<CategoryAttribute>>) {
       state.dataTree = action.payload.data as Array<CategoryAttribute>;
+      state.isFetching = false;
+    },
+
+    // * FETCH CATEGORY PRODUCT
+    fetchCatProductStart(state) {
+      state.isFetching = true;
+    },
+    fetchCatProductSucceed(state, action: PayloadAction<ListResponse<CategoryAttribute>>) {
+      state.dataProduct = action.payload.data as Array<CategoryAttribute>;
       state.isFetching = false;
     },
 

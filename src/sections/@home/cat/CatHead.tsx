@@ -1,9 +1,13 @@
 import { Box, Button, Link, Paper, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-export interface CatHeadProps {}
+export interface CatHeadProps {
+  title: string;
+}
 
 export default function CatHead(props: CatHeadProps) {
+  const { title } = props;
+
   return (
     <Paper elevation={3}>
       <Stack
@@ -14,7 +18,7 @@ export default function CatHead(props: CatHeadProps) {
         p="12px"
         flexWrap="wrap"
       >
-        <Typography variant="h5">Danh mục</Typography>
+        <Typography variant="h5">{title}</Typography>
 
         <Box>
           <Button color="inherit">Best Seller</Button>

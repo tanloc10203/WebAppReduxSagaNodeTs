@@ -23,6 +23,22 @@ function* fetchCategory({ payload }: PayloadAction<GetAllCategoryApi>) {
   }
 }
 
+function* fetchCategoryProduct() {
+  try {
+    const response: ListResponse<CategoryAttribute> = yield call(categoryApi.getProduct);
+
+    if (!response.error) yield put(categoryActions.fetchCatProductSucceed(response));
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status)
+        yield put(categoryActions.fetchCategoryFailed(error.response.data?.message));
+      yield put(categoryActions.fetchCategoryFailed(error.message));
+    } else if (error instanceof Error) {
+      yield put(categoryActions.fetchCategoryFailed(error.message));
+    }
+  }
+}
+
 function* fetchCategoryTree() {
   try {
     const response: ListResponse<CategoryAttribute> = yield call(categoryApi.getTree);
@@ -98,6 +114,10 @@ function* watchFetchCategory() {
   yield takeLatest(categoryActions.fetchCategoryStart.type, fetchCategory);
 }
 
+function* watchFetchCatProduct() {
+  yield takeLatest(categoryActions.fetchCatProductStart.type, fetchCategoryProduct);
+}
+
 function* watchFetchCategoryTree() {
   yield takeLatest(categoryActions.fetchCategoryTreeStart.type, fetchCategoryTree);
 }
@@ -121,5 +141,6 @@ export default function* categorySaga() {
     watchFetchCategoryCreate(),
     watchSetFilterNameLike(),
     watchFetchCategoryEdit(),
+    watchFetchCatProduct(),
   ]);
 }

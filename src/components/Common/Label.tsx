@@ -36,8 +36,8 @@ const RootStyle = styled('span')(({ theme, ownerState }: RootStyleInterface) => 
   });
 
   return {
-    height: 22,
-    minWidth: 22,
+    height: 30,
+    minWidth: 30,
     lineHeight: 0,
     borderRadius: 6,
     cursor: 'default',

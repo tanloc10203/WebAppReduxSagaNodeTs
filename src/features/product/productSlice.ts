@@ -10,8 +10,13 @@ import {
 } from 'models';
 import { toast } from 'react-toastify';
 
+export interface Collections {
+  [key: string]: Array<ProductAttribute>;
+}
+
 interface ProductState extends FetchDataStateSlice<ProductAttribute> {
   paramGetRandom: ParamGetRandom;
+  collections: Collections;
 }
 
 const initialState: ProductState = {
@@ -30,6 +35,7 @@ const initialState: ProductState = {
   paramGetRandom: {
     _day: null || localStorage.getItem('dayGet'),
   },
+  collections: {},
 };
 
 const productSlice = createSlice({

@@ -1,9 +1,8 @@
 import { Box } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { useAppSelector } from 'app/hooks';
 import SkeletonCustom from 'components/Skeleton';
-import { productSelector } from 'features/product/productSlice';
+import { ProductAttribute } from 'models';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperItemCard from './SwiperItemCard';
@@ -19,8 +18,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function ContentDealOfDay() {
-  const { data, isFetching } = useAppSelector(productSelector);
+interface ContentDealOfDayProps {
+  data: Array<ProductAttribute>;
+  loading: boolean;
+}
+
+export default function ContentDealOfDay(props: ContentDealOfDayProps) {
+  const { data, loading } = props;
   const classes = useStyles();
 
   return (
@@ -37,8 +41,8 @@ export default function ContentDealOfDay() {
             spaceBetween: 10,
           },
           640: {
-            slidesPerView: 2,
-            spaceBetween: 15,
+            slidesPerView: 3,
+            spaceBetween: 20,
           },
           768: {
             slidesPerView: 4,
@@ -60,7 +64,7 @@ export default function ContentDealOfDay() {
               </SwiperSlide>
             );
           })}
-        {isFetching &&
+        {loading &&
           [...Array(6)].map((_, index) => (
             <SwiperSlide key={index}>
               <SkeletonCustom />

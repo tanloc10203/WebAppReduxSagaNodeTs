@@ -84,6 +84,10 @@ export default function ProductMoreMenu({ status, productId, priceId }: ProductM
             return null;
           }
 
+          if (!Boolean(priceId) && menu.title === 'Update Price') {
+            return null;
+          }
+
           return (
             <MenuItem
               key={index}

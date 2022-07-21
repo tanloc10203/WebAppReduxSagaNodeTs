@@ -1,9 +1,10 @@
-import { Divider } from '@mui/material';
+import { Alert, Divider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { useAppDispatch } from 'app/hooks';
 import { categoryActions } from 'features/category/categorySlice';
 import { useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router-dom';
 import { ProductCartWidget } from 'sections/@dashboard/products';
 import { BottomAppBar, CopyRight, Footer, Header } from './components';
@@ -45,6 +46,14 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <Alert variant="filled" severity="error">
+      ERROR: {error.message}
+    </Alert>
+  );
+}
+
 export default function Home() {
   const dispatch = useAppDispatch();
 
@@ -61,24 +70,26 @@ export default function Home() {
       <Header />
 
       <MainStyle>
-        <span id="back-to-top-anchor" />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <span id="back-to-top-anchor" />
 
-        <ProductCartWidget />
+          <ProductCartWidget />
 
-        <Routes>
-          <Route element={<HomePageMain />} index />
-          <Route element={<CategoryPage />} path="category/:slug" />
-        </Routes>
+          <Routes>
+            <Route element={<HomePageMain />} index />
+            <Route element={<CategoryPage />} path="category/:slug" />
+          </Routes>
 
-        <BackToTop />
+          <BackToTop />
 
-        <BottomAppBar />
+          <BottomAppBar />
 
-        <Footer />
+          <Footer />
 
-        <Divider sx={{ mt: 10 }} component="div" variant="fullWidth" />
+          <Divider sx={{ mt: 10 }} component="div" variant="fullWidth" />
 
-        <CopyRight />
+          <CopyRight />
+        </ErrorBoundary>
       </MainStyle>
     </RootStyle>
   );

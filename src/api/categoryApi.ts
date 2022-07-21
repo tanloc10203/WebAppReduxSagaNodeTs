@@ -29,6 +29,10 @@ const categoryApi = {
   getTree(): Promise<ListResponse<CategoryAttribute>> {
     return axiosClient.get(categoryApi.name + '/tree');
   },
+
+  getProduct(): Promise<ListResponse<CategoryAttribute>> {
+    return axiosClient.get(categoryApi.name + '/product');
+  },
 };
 
 export default categoryApi;
