@@ -14,6 +14,8 @@ export interface CategoryAttribute {
   image?: string;
   createdAt?: string;
   updatedAt?: string;
+
+  [key: string]: any;
 }
 
 export class Category extends Model implements CategoryAttribute {
@@ -68,7 +70,7 @@ export function associateCategory(): void {
   Category.hasMany(Product, {
     sourceKey: 'id',
     foreignKey: 'categoryId',
-    as: 'categoryId',
+    as: 'products',
   });
 
   Category.hasMany(Category, {

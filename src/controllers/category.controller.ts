@@ -25,6 +25,10 @@ export const categoryController = {
     return categoryController.db.getById(req, res);
   },
 
+  getProduct(req: Request, res: Response) {
+    return categoryController.db.getProduct(req, res);
+  },
+
   delete(req: Request, res: Response) {
     return categoryController.db.delete(req, res);
   },

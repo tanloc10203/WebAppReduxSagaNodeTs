@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Attributes, FindOptions, Model, ModelCtor, WhereOptions } from 'sequelize/types';
+import { Attributes, FindOptions, Model, ModelCtor } from 'sequelize/types';
 import { CommonController } from '../class';
 import { db } from '../config/db';
 import log from '../logger';
@@ -175,6 +175,113 @@ export class Category extends CommonController {
         message: 'GET ALL SUCCEED.',
         error: false,
         data: response,
+      });
+    } catch (error) {
+      log.error(error);
+      if (error instanceof Error)
+        return res.status(500).json({ message: 'ERROR FROM SERVER!!!', error: error.message });
+    }
+  }
+
+  public async getProduct(req: Request, res: Response) {
+    try {
+      const response = await super.handleGetAll({
+        where: {
+          level: 1,
+        },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt'],
+        },
+
+        include: [
+          {
+            model: db.Category,
+            as: 'children',
+            include: [
+              {
+                model: db.Product,
+                as: 'products',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt'],
+                },
+                limit: 10,
+                include: [
+                  {
+                    model: db.StatusProduct,
+                    as: 'status',
+                    attributes: {
+                      exclude: ['id', 'createdAt', 'updatedAt'],
+                    },
+                  },
+                  {
+                    model: db.ProductPrice,
+                    as: 'price',
+                    attributes: {
+                      exclude: ['createdAt', 'updatedAt'],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: db.Product,
+            as: 'products',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt'],
+            },
+            limit: 10,
+            include: [
+              {
+                model: db.StatusProduct,
+                as: 'status',
+                attributes: {
+                  exclude: ['id', 'createdAt', 'updatedAt'],
+                },
+              },
+              {
+                model: db.ProductPrice,
+                as: 'price',
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt'],
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      let data: Array<CategoryAttribute>;
+
+      data = response as unknown as Array<CategoryAttribute>;
+
+      data = data.map((item) => {
+        const newItem: CategoryAttribute = item.get({ plain: true });
+
+        if (Boolean(newItem?.children) && newItem?.children && newItem.children.length > 0) {
+          const obj = newItem.children
+            .map((c: CategoryAttribute) => c.products)
+            .reduce((t, d) => d, {});
+
+          const check = {
+            ...newItem,
+            products: [...obj, ...newItem.products],
+          };
+
+          const { children, ...result } = check;
+
+          return result;
+        }
+
+        const { children, ...result } = newItem;
+
+        return result;
+      });
+
+      res.status(200).json({
+        message: 'GET ALL SUCCEED.',
+        error: false,
+        data: data,
       });
     } catch (error) {
       log.error(error);
