@@ -3,6 +3,7 @@ import { lazy, useState } from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { Loader } from 'routes';
 import { DashboardNavbar, DashboardSidebar } from './components';
+import { Product } from './page';
 import Category from './page/Category';
 
 const APP_BAR_MOBILE = 64;
@@ -29,7 +30,7 @@ const MainStyle = styled('div')(({ theme }) => ({
 
 const DashboardApp = Loader(lazy(() => import('./page/DashboardApp')));
 
-const Product = Loader(lazy(() => import('./page/Product')));
+// const Product = Loader(lazy(() => import('./page/Product')));
 
 const User = Loader(lazy(() => import('./page/User')));
 

@@ -1,5 +1,6 @@
 import categorySaga from 'features/category/categorySaga';
 import productSaga from 'features/product/productSaga';
+import productImageSaga from 'features/productImage/productImageSaga';
 import productPriceSaga from 'features/productPrice/productPriceSaga';
 import productStatusSaga from 'features/productStatus/productStatusSaga';
 import { all } from 'redux-saga/effects';
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     productPriceSaga(),
     productSaga(),
     productStatusSaga(),
+    productImageSaga(),
   ]);
 }

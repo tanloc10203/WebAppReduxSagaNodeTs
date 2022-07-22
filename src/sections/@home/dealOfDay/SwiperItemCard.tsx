@@ -10,16 +10,16 @@ import {
 } from '@mui/material';
 import { LazyLoadingImg } from 'components/Common';
 import { ProductAttribute } from 'models';
-import { Link as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink } from 'react-router-dom';
 import { fPriceVN } from 'utils';
 
 export default function SwiperItemCard({ product }: { product: ProductAttribute }) {
-  const { name, price, thumb } = product;
+  const { name, price, thumb, slug } = product;
 
   return (
     <Link
       component={RouterLink}
-      to="#"
+      to={`/${slug}`}
       sx={{ width: '100%', height: '100%', display: 'block', textDecoration: 'none' }}
     >
       <Card

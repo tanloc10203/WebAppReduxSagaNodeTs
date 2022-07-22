@@ -3,19 +3,19 @@ import EventInfo from '@ckeditor/ckeditor5-utils/src/eventinfo';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
-import { ReviewImg } from 'components/Common';
+import { ErrorFallbackAlert, ReviewImg } from 'components/Common';
 import { InputField, SelectField, SelectOptions, UploadFile } from 'components/FormFields';
 import Markdown from 'components/Markdown';
-import { storage } from 'config/firebase';
 import { selectCategoryOptions } from 'features/category/categorySlice';
 import { productSelector } from 'features/product/productSlice';
 import { selectProductStatusOptions } from 'features/productStatus/productStatusSlice';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { ProductAttribute } from 'models';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { convertToSlug } from 'utils';
 import * as yup from 'yup';
+import UploadImageProduct from './UploadImageProduct';
 
 export interface ProductAddEditFormProps {
   initialValues?: ProductAttribute;
@@ -43,7 +43,9 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
 
   const { isFetching } = useAppSelector(productSelector);
 
-  const [urlImg, setUrl] = useState<string>('');
+  const [urlImg, setUrlImg] = useState<string>('');
+
+  const [file, setFile] = useState<File | null>(null);
 
   const [productDetail, setProductDetail] = useState<string>('');
 
@@ -59,7 +61,7 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
     if (!(initialValues as ProductAttribute).id) return;
 
     setProductDetail(initialValues?.productDetail as string);
-    setUrl(initialValues?.thumb as string);
+    setUrlImg(initialValues?.thumb as string);
     setSlug(initialValues?.slug as string);
   }, [initialValues]);
 
@@ -76,21 +78,9 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
     await onSubmit?.(newValues);
   };
 
-  const handleImgUpload = (file: File): Promise<string | undefined> => {
-    return new Promise((resolve, reject) => {
-      try {
-        if (file == null) return;
-        const imageRef = ref(storage, `images/${file.name + file.lastModified}`);
-        uploadBytes(imageRef, file).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            setUrl(url);
-            resolve(url);
-          });
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
+  const handleImgUpload = async (file: File) => {
+    if (!file) return;
+    setFile(file);
   };
 
   const handleChangeProductDetail = (event: EventInfo, editor: Editor) => {
@@ -102,97 +92,115 @@ export default function ProductAddEditForm({ initialValues, onSubmit }: ProductA
     setSlug(convertToSlug(event.target.value));
   };
 
+  const handleGetImgUrl = (imgUrl: string) => {
+    setFile(null);
+    setUrlImg(imgUrl);
+  };
+
   const loading = isSubmitting ? true : isFetching ? true : false;
 
   return (
-    <Box
-      component="form"
-      noValidate
-      sx={{ mt: 1, width: '100%' }}
-      onSubmit={handleSubmit(handleOnSubmit)}
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <InputField
-            name="name"
-            id="product-name"
-            onChange={handleChange}
-            control={control}
-            label="Product name"
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            value={slug}
-            label="Slug"
-            variant="outlined"
-            margin="normal"
-            size="small"
-            fullWidth
-            disabled
-          />
-        </Grid>
-
-        {Array.isArray(categoryOptions) && categoryOptions.length > 0 && (
+    <ErrorBoundary FallbackComponent={ErrorFallbackAlert}>
+      <Box
+        component="form"
+        noValidate
+        sx={{ mt: 1, width: '100%' }}
+        onSubmit={handleSubmit(handleOnSubmit)}
+      >
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <SelectField
-              name="categoryId"
+            <InputField
+              name="name"
+              id="product-name"
+              onChange={handleChange}
               control={control}
-              label="Category Id"
-              options={categoryOptions as Array<SelectOptions>}
+              label="Product name"
             />
           </Grid>
-        )}
 
-        {Array.isArray(productStatusOptions) && productStatusOptions.length > 0 && (
           <Grid item xs={12} sm={6}>
-            <SelectField
-              name="statusPId"
-              control={control}
-              label="Product Status Id"
-              options={productStatusOptions as Array<SelectOptions>}
+            <TextField
+              value={slug}
+              label="Slug"
+              variant="outlined"
+              margin="normal"
+              size="small"
+              fullWidth
+              disabled
             />
           </Grid>
-        )}
 
-        <Grid item xs={12}>
-          <InputField name="description" control={control} label="Description" />
-        </Grid>
+          {Array.isArray(categoryOptions) && categoryOptions.length > 0 && (
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name="categoryId"
+                control={control}
+                label="Category Id"
+                options={categoryOptions as Array<SelectOptions>}
+              />
+            </Grid>
+          )}
 
-        <Grid item xs={12}>
-          {(!Boolean(initialValues?.id) || Boolean(productDetail)) && (
-            <Markdown value={productDetail} onChangeValueInput={handleChangeProductDetail} />
+          {Array.isArray(productStatusOptions) && productStatusOptions.length > 0 && (
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name="statusPId"
+                control={control}
+                label="Product Status Id"
+                options={productStatusOptions as Array<SelectOptions>}
+              />
+            </Grid>
+          )}
+
+          <Grid item xs={12}>
+            <InputField name="description" control={control} label="Description" />
+          </Grid>
+
+          <Grid item xs={12}>
+            {(!Boolean(initialValues?.id) || Boolean(productDetail)) && (
+              <Markdown value={productDetail} onChangeValueInput={handleChangeProductDetail} />
+            )}
+          </Grid>
+
+          <Grid item xs={12}>
+            <UploadFile onChange={handleImgUpload} />
+            <UploadImageProduct file={file as File} onGetUrl={handleGetImgUrl} />
+          </Grid>
+
+          {urlImg.length > 0 && (
+            <Grid item xs={12}>
+              <Box
+                position="relative"
+                sx={{
+                  height: 233,
+                  width: 350,
+                  maxHeight: { xs: 233, md: 167 },
+                  maxWidth: { xs: 350, md: 250 },
+                }}
+              >
+                <ReviewImg
+                  open={open}
+                  urlImg={urlImg}
+                  onOpen={() => setOpen(true)}
+                  onClose={() => setOpen(false)}
+                />
+              </Box>
+            </Grid>
           )}
         </Grid>
 
-        <Grid item xs={12}>
-          <UploadFile onChange={handleImgUpload} />
-        </Grid>
-
-        {urlImg.length > 0 && (
-          <Grid item xs={12}>
-            <ReviewImg
-              open={open}
-              urlImg={urlImg}
-              onOpen={() => setOpen(true)}
-              onClose={() => setOpen(false)}
-            />
-          </Grid>
-        )}
-      </Grid>
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-        color="primary"
-        disabled={loading}
-      >
-        {loading && <CircularProgress size={16} color="inherit" />}
-        &nbsp;{!Boolean(initialValues?.id) ? 'Add new' : 'Save'}
-      </Button>
-    </Box>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          color="primary"
+          disabled={loading}
+        >
+          {loading && <CircularProgress size={16} color="inherit" />}
+          &nbsp;{!Boolean(initialValues?.id) ? 'Add new' : 'Save'}
+        </Button>
+      </Box>
+    </ErrorBoundary>
   );
 }

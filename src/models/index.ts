@@ -4,3 +4,4 @@ export * from './product';
 export * from './productStatus';
 export * from './category';
 export * from './productPrice';
+export * from './productImages';

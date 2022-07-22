@@ -17,7 +17,6 @@ export default function ReviewImg({ open, urlImg, onOpen, onClose }: IReviewImgP
           width: 350,
           maxHeight: { xs: 233, md: 167 },
           maxWidth: { xs: 350, md: 250 },
-          position: 'unset !important',
           cursor: 'pointer',
         }}
         url={urlImg}

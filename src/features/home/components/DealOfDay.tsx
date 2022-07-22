@@ -6,12 +6,12 @@ import { ContentDealOfDay, HeadDealOfDay } from 'sections/@home/dealOfDay';
 export interface DealOfDateProps {}
 
 export default function DealOfDay(props: DealOfDateProps) {
-  const { data, isFetching } = useAppSelector(productSelector);
+  const { data } = useAppSelector(productSelector);
 
   return (
     <Box mt={10}>
       <HeadDealOfDay />
-      <ContentDealOfDay data={data} loading={isFetching} />
+      <ContentDealOfDay data={data} />
     </Box>
   );
 }

@@ -1,11 +1,7 @@
+import { Input } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import { ChangeEvent, useRef } from 'react';
-
-const Input = styled('input')({
-  display: 'none',
-});
 
 export interface UploadFileProps {
   onChange?: (file: File) => void;
@@ -20,17 +16,18 @@ export default function UploadFile({ onChange }: UploadFileProps) {
     if (!file) return;
 
     onChange?.(file[0]);
+
+    if (fileRef.current) (fileRef.current as HTMLInputElement).value = '';
   };
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       <label htmlFor="contained-button-file">
         <Input
-          accept="image/*"
           id="contained-button-file"
-          multiple
           type="file"
-          ref={fileRef}
+          inputRef={fileRef}
+          sx={{ display: 'none' }}
           onChange={handleChange}
         />
         <Button variant="contained" component="span">

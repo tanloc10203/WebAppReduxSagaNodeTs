@@ -3,3 +3,4 @@ export * from './decodeJti';
 export * from './formatTime';
 export * from './formatNumber';
 export { default as convertToSlug } from './covertToSlug';
+export * from './functions';

@@ -16,6 +16,7 @@ export interface ProductMoreMenuProps {
   productId: number;
   priceId: number;
   status: KeyStatusProduct;
+  image?: [] | null;
 }
 
 export default function ProductMoreMenu({ status, productId, priceId }: ProductMoreMenuProps) {
@@ -46,10 +47,10 @@ export default function ProductMoreMenu({ status, productId, priceId }: ProductM
       title: 'Update Price',
     },
     {
-      // path: '/dashboard/products/update/price/' + productId + '/' + priceId,
-      // component: RouterLink,
-      icon: 'bx:image-add',
-      title: 'Add List Image',
+      path: '/dashboard/products/images/' + productId,
+      component: RouterLink,
+      icon: 'dashicons:image-rotate-left',
+      title: 'List Image',
     },
   ];
 

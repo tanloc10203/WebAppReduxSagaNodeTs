@@ -10,3 +10,6 @@ export { default as SaleProduct } from './SaleProduct';
 export { default as Footer } from './Footer';
 export { default as CopyRight } from './CopyRight';
 export { default as BannerProduct } from './BannerProduct';
+export { default as LoadingHeadCat } from './LoadingHeadCat';
+export { default as LoadingContentCat } from './LoadingContentCat';
+export { default as LoadingCat } from './LoadingCat';

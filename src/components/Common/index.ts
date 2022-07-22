@@ -11,3 +11,4 @@ export { default as ScrollToTop } from './ScrollToTop';
 export { default as SvgIconStyle } from './SvgIconStyle';
 export { default as LazyLoadingImg } from './LazyLoadingImg';
 export { default as ReviewImg } from './ReviewImg';
+export { default as ErrorFallbackAlert } from './ErrorFallbackAlert';

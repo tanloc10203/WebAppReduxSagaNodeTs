@@ -26,6 +26,10 @@ const productApi = {
     return axiosClient.get(`${productApi.name}/${id}`);
   },
 
+  getBySlug(slug: string): Promise<ListResponse<ProductAttribute>> {
+    return axiosClient.get(`${productApi.name}/slug/${slug}`);
+  },
+
   getRandom(params: ParamGetRandom): Promise<ListResponseRandom<ProductAttribute>> {
     return axiosClient.get(productApi.name + '/collections', { params });
   },

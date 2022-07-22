@@ -1,10 +1,9 @@
 import { Box } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { ProductAttribute } from 'models';
+import SkeletonCustom from 'components/Skeleton';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperItemCard from './SwiperItemCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   swiper: {
@@ -17,12 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface ContentDealOfDayProps {
-  data: Array<ProductAttribute>;
-}
-
-export default function ContentDealOfDay(props: ContentDealOfDayProps) {
-  const { data } = props;
+export default function LoadingContentCat() {
   const classes = useStyles();
 
   return (
@@ -54,14 +48,11 @@ export default function ContentDealOfDay(props: ContentDealOfDayProps) {
         modules={[Pagination]}
         className={classes.swiper}
       >
-        {Boolean(data) &&
-          data.map((item, i) => {
-            return (
-              <SwiperSlide key={i}>
-                <SwiperItemCard product={item} />
-              </SwiperSlide>
-            );
-          })}
+        {[...Array(6)].map((_, index) => (
+          <SwiperSlide key={index}>
+            <SkeletonCustom />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </Box>
   );

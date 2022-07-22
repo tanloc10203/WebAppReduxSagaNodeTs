@@ -1,15 +1,17 @@
-import { Alert, Divider } from '@mui/material';
+import { Divider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { useAppDispatch } from 'app/hooks';
+import { ErrorFallbackAlert } from 'components/Common';
 import { categoryActions } from 'features/category/categorySlice';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Route, Routes } from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import { ProductCartWidget } from 'sections/@dashboard/products';
 import { BottomAppBar, CopyRight, Footer, Header } from './components';
 import { BackToTop } from './components/ScrollTop';
 import { CategoryPage, HomePageMain } from './page';
+import ProductPage from './page/ProductPage';
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -46,14 +48,6 @@ const MainStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-function ErrorFallback({ error }: { error: Error }) {
-  return (
-    <Alert variant="filled" severity="error">
-      ERROR: {error.message}
-    </Alert>
-  );
-}
-
 export default function Home() {
   const dispatch = useAppDispatch();
 
@@ -70,7 +64,7 @@ export default function Home() {
       <Header />
 
       <MainStyle>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary FallbackComponent={ErrorFallbackAlert}>
           <span id="back-to-top-anchor" />
 
           <ProductCartWidget />
@@ -78,6 +72,7 @@ export default function Home() {
           <Routes>
             <Route element={<HomePageMain />} index />
             <Route element={<CategoryPage />} path="category/:slug" />
+            <Route element={<ProductPage />} path=":slug" />
           </Routes>
 
           <BackToTop />
@@ -91,6 +86,7 @@ export default function Home() {
           <CopyRight />
         </ErrorBoundary>
       </MainStyle>
+      <Outlet />
     </RootStyle>
   );
 }

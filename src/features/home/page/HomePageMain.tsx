@@ -4,7 +4,7 @@ import { Page } from 'components/Common';
 import { categoryActions, categorySelector } from 'features/category/categorySlice';
 import { productActions, productSelector } from 'features/product/productSlice';
 import { ProductAttribute } from 'models';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { CatHead } from 'sections/@home/cat';
 import { ContentDealOfDay } from 'sections/@home/dealOfDay';
 import {
@@ -12,13 +12,14 @@ import {
   BannerProduct,
   DealOfDay,
   Features,
+  LoadingCat,
   SaleProduct,
   TopCatOfMonth,
 } from '../components';
 
 export interface HomePageMainProps {}
 
-export default function HomePageMain(props: HomePageMainProps) {
+function HomePageMain(props: HomePageMainProps) {
   const { paramGetRandom } = useAppSelector(productSelector);
   const { dataProduct, isFetching } = useAppSelector(categorySelector);
   const dispatch = useAppDispatch();
@@ -36,21 +37,22 @@ export default function HomePageMain(props: HomePageMainProps) {
 
       <BannerProduct />
 
+      {isFetching && <LoadingCat />}
       <DealOfDay />
 
       <TopCatOfMonth />
 
-      {dataProduct.map((item, i) => {
-        return (
-          <Box mt={10} key={i}>
-            <CatHead title={item.name} />
-            <ContentDealOfDay
-              data={item.products as Array<ProductAttribute>}
-              loading={isFetching}
-            />
-          </Box>
-        );
-      })}
+      {isFetching && [...Array(3)].map((item, i) => <LoadingCat key={i} />)}
+
+      {Boolean(dataProduct) &&
+        dataProduct.map((item, i) => {
+          return (
+            <Box mt={10} key={i}>
+              <CatHead title={item.name} />
+              <ContentDealOfDay data={item.products as Array<ProductAttribute>} />
+            </Box>
+          );
+        })}
 
       <SaleProduct />
 
@@ -58,3 +60,5 @@ export default function HomePageMain(props: HomePageMainProps) {
     </Page>
   );
 }
+
+export default memo(HomePageMain);
