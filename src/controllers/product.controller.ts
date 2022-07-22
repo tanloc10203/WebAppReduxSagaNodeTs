@@ -17,6 +17,10 @@ export const productController = {
     return productController.db.getById(req, res);
   },
 
+  getBySlug(req: Request, res: Response) {
+    return productController.db.getBySlug(req, res);
+  },
+
   getCollections(req: Request, res: Response) {
     return productController.db.getCollections(req, res);
   },

@@ -6,8 +6,10 @@ import { Product, ProductAttribute } from './product.model';
 
 export interface ProductImagesAttribute {
   id?: number;
+
   urlImg: string;
   productId: number;
+
   createdAt?: string;
   updatedAt?: string;
 }

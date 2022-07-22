@@ -259,4 +259,51 @@ export class Product extends CommonController {
         return res.status(500).json({ message: 'ERROR FROM SERVER!!!', error: error.message });
     }
   }
+
+  public async getBySlug(
+    req: Request,
+    res: Response
+  ): Promise<Response<any, Record<string, any>> | undefined> {
+    try {
+      const slug = req.params.slug;
+
+      const response = await super.handleFind({
+        where: { slug },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt'],
+        },
+        include: [
+          {
+            model: db.Category,
+            as: 'categories',
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt'],
+            },
+          },
+          {
+            model: db.StatusProduct,
+            as: 'status',
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt'],
+            },
+          },
+          {
+            model: db.ProductPrice,
+            as: 'price',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt'],
+            },
+          },
+        ],
+      });
+
+      if (!response) return res.status(400).json({ message: 'Slug was not found !', error: true });
+
+      res.status(200).json({ message: 'Get row by slug succeed.', error: false, data: response });
+    } catch (error) {
+      log.error(error);
+      if (error instanceof Error)
+        return res.status(500).json({ message: 'ERROR FROM SERVER!!!', error: error.message });
+    }
+  }
 }
