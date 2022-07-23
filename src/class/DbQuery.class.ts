@@ -38,43 +38,54 @@ export class DbQuery {
   }
 
   public handleGetAllAndFilter(filter: FilterPayload) {
-    let { _limit, _page, _order, _name, name_like, ...others } = filter;
+    let { _limit, _page, _order, name_query, name_order, name_like, ...others } = filter;
+
+    if (parseInt(name_like as string)) name_like = parseInt(name_like as string) as number;
 
     return this.Db.findAndCountAll({
       where: {
         ...others,
-        name: {
-          [Op.like]: `%${name_like || ''}%`,
+        [`${name_query}`]: {
+          [name_like ? Op.like : Op.not]: name_like ? `%${name_like}%` : null,
         },
       },
       limit: _limit,
       offset: _limit * _page,
-      order: [[`${_name || 'id'}`, `${_order || 'ASC'}`]],
+      order: [[`${name_order || 'id'}`, `${_order || 'ASC'}`]],
     });
+  }
+
+  public handleBulkCreate<T>(data: Array<T>) {
+    // @ts-ignore
+    return this.Db.bulkCreate(data);
   }
 
   public handleGetAllAndFilterByIncludes(
     filter: FilterPayload,
     includes?: Includeable | Array<Includeable>
   ) {
-    let { _limit, _page, _order, _name, name_like, ...others } = filter;
+    let { _limit, _page, _order, name_query, name_order, name_like, ...others } = filter;
 
     return this.Db.findAndCountAll({
       where: {
         ...others,
-        name: {
-          [Op.like]: `%${name_like || ''}%`,
+        [`${name_query}`]: {
+          [name_like ? Op.like : Op.not]: name_like ? `%${name_like}%` : null,
         },
       },
       limit: _limit,
       offset: _limit * _page,
-      order: [[`${_name || 'id'}`, `${_order || 'ASC'}`]],
+      order: [[`${name_order || 'id'}`, `${_order || 'ASC'}`]],
       include: includes,
     });
   }
 
   public handleUpdate<T>(id: number, data: T) {
     return this.Db.update({ ...data }, { where: { id: id } });
+  }
+
+  public handleDelete(id: number) {
+    return this.Db.destroy({ where: { id } });
   }
 
   public handleGetById(id: number) {

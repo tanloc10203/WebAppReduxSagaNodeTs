@@ -37,8 +37,9 @@ export interface FilterPayload {
   _limit: number;
   _page: number;
   _order?: 'ASC' | 'DESC';
-  _name?: string;
-  name_like?: string;
+  name_order?: string;
+  name_query: string;
+  name_like?: string | number;
 
   [key: string]: any;
 }

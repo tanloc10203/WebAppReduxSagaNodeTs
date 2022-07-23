@@ -1,9 +1,10 @@
-import { Express, Request, Response, Router } from 'express';
+import { Express, Request, Response } from 'express';
 import { introServer } from '../utils';
 import authRoute from './auth';
 import categoryRoute from './category';
 import memberRoute from './member';
 import productRoute from './product';
+import productImageRoute from './productImage';
 import productPriceRoute from './productPrice';
 import productStatusRoute from './productStatus';
 
@@ -15,6 +16,7 @@ const initWebRoutes = (app: Express) => {
   app.use('/api/product', productRoute);
   app.use('/api/product-status', productStatusRoute);
   app.use('/api/product-price', productPriceRoute);
+  app.use('/api/product-image', productImageRoute);
 
   app.use((req: Request, res: Response) => {
     if (!req.route)

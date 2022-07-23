@@ -84,7 +84,8 @@ export class Product extends CommonController {
   ): Promise<Response<any, Record<string, any>> | undefined> {
     try {
       const _order = req.query._order as 'DESC' | 'ASC';
-      const _name = req.query._name as string;
+      const name_order = req.query.name_order as string;
+      const name_query = req.query.name_query as string;
       const name_like = req.query.name_like as string;
 
       const _limit = parseInt(req.query._limit as string);
@@ -92,7 +93,7 @@ export class Product extends CommonController {
 
       _page = _page < 1 ? (_page = 0) : _page - 1;
 
-      if (!_limit && !_page && !_order && !_name && !name_like) {
+      if (!_limit && !_page && !_order && !name_order && !name_like) {
         const response = await super.handleGetAll();
 
         return res.status(200).json({
@@ -111,7 +112,8 @@ export class Product extends CommonController {
         ...req.query,
         _limit,
         _page,
-        _name,
+        name_order,
+        name_query: name_query || 'name',
         _order,
         name_like,
       };
