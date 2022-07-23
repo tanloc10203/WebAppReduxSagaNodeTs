@@ -1,46 +1,33 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { CircularProgress } from '@material-ui/core';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, ImageList } from '@mui/material';
 import { useAppSelector } from 'app/hooks';
-import { isFetchingProductPriceSelector } from 'features/productPrice/productPriceSlice';
+import { UploadFileMultiple } from 'components/FormFields';
+import { productImageSelectors } from 'features/productImage/productImageSlice';
 import { ProductImagesAttribute } from 'models';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import ProgressImageItem from 'sections/@dashboard/product-image/ProgressImageItem';
 
 export interface ProductPageAddEditListImgFormProps {
   initialValues?: Omit<ProductImagesAttribute, 'productId'>;
+  productId: number;
   onSubmit?: (values: ProductImagesAttribute) => Promise<unknown>;
 }
 
-const productPriceFormAddSchema = yup
-  .object({
-    price: yup.number().required().positive().min(1000),
-    isSale: yup.boolean().required(),
-    percentDiscount: yup
-      .number()
-      .min(0)
-      .max(100)
-      .required()
-      .when('isSale', {
-        is: true,
-        then: yup.number().min(0.1).max(100).required(),
-        otherwise: yup.number().min(0).max(100).notRequired(),
-      }),
-  })
-  .required();
+const log = console.log;
 
-export default function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps) {
-  const { initialValues, onSubmit } = props;
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<ProductImagesAttribute>({
-    defaultValues: initialValues,
-    resolver: yupResolver(productPriceFormAddSchema),
+function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps) {
+  const { onSubmit, productId } = props;
+  const { handleSubmit } = useForm<ProductImagesAttribute>({});
+
+  const { isFetching } = useAppSelector(productImageSelectors);
+
+  const [files, setFiles] = useState<Array<File>>(() => {
+    log('Initializers run twice');
+    return [];
   });
 
-  const isFetching = useAppSelector(isFetchingProductPriceSelector);
+  const [data, setData] = useState<Array<ProductImagesAttribute>>([]);
 
   const handleOnSubmit = async (values: ProductImagesAttribute) => {
     if (!onSubmit) return;
@@ -48,7 +35,32 @@ export default function ProductPageAddEditListImgForm(props: ProductPageAddEditL
     await onSubmit?.(values);
   };
 
-  const loading = isSubmitting ? true : isFetching ? true : false;
+  const loading = isFetching ? true : false;
+
+  const handleChangeFiles = (filesInput: Array<File>) => {
+    log('Event handlers don’t need to be pure, so they run only once');
+    if (!Boolean(filesInput)) return;
+
+    const uploadFiles = [...files];
+
+    // eslint-disable-next-line array-callback-return
+    filesInput.some((file) => {
+      if (uploadFiles.findIndex((f) => f.name === file.name) === -1) {
+        uploadFiles.push(file);
+      }
+    });
+
+    setFiles((pre) => {
+      log('Updaters run twice');
+      return [...pre, ...uploadFiles];
+    });
+  };
+
+  const handleGetFileUrl = (values: string) => {
+    console.log('check data', values);
+  };
+
+  log(files);
 
   return (
     <Box
@@ -58,7 +70,16 @@ export default function ProductPageAddEditListImgForm(props: ProductPageAddEditL
       onSubmit={handleSubmit(handleOnSubmit)}
     >
       <Grid container spacing={2}>
-        dsdsfsdfs
+        <Grid item>
+          <UploadFileMultiple onChange={handleChangeFiles} />
+          <ImageList rowHeight={200} cols={4}>
+            {Boolean(files) &&
+              (files as Array<File>)?.length > 0 &&
+              (files as Array<File>).map((file, index) => (
+                <ProgressImageItem file={file} key={index} onGetUrl={handleGetFileUrl} />
+              ))}
+          </ImageList>
+        </Grid>
       </Grid>
 
       <Button
@@ -75,3 +96,5 @@ export default function ProductPageAddEditListImgForm(props: ProductPageAddEditL
     </Box>
   );
 }
+
+export default ProductPageAddEditListImgForm;

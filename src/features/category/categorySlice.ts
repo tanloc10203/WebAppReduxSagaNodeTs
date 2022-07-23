@@ -17,7 +17,7 @@ const initialState: CategoryState = {
   dataProduct: [],
   filters: {
     _order: 'ASC',
-    _name: 'id',
+    name_order: 'id',
     _limit: 5,
     _page: 0,
     name_like: '',

@@ -11,7 +11,7 @@ export default function Product() {
       <Routes>
         <Route index element={<ProductPageMain />} />
         <Route path="add" element={<ProductPageAddEdit />} />
-        <Route path="images/add" element={<ProductPageAddEditListImg />} />
+        <Route path="images/add/:productId" element={<ProductPageAddEditListImg />} />
         <Route path="images/update/:productImgId" element={<ProductPageAddEditListImg />} />
         <Route path="images/:productId" element={<ProductPageImages />} />
         <Route path="add/:productId" element={<ProductPageAddEdit />} />

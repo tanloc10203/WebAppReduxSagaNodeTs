@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PayloadFetchCreateProductImg } from 'api/productImgApi';
 import { RootState } from 'app/store';
-import { FetchDataStateSlice, ListResponse, ProductImagesAttribute } from 'models';
+import { FetchDataStateSlice, FilterPayload, ListResponse, ProductImagesAttribute } from 'models';
 import { toast } from 'react-toastify';
 
 interface ProductImageState extends FetchDataStateSlice<ProductImagesAttribute> {}
@@ -10,6 +10,18 @@ const initialState: ProductImageState = {
   data: [],
   isFetching: false,
   error: '',
+  filters: {
+    _order: 'ASC',
+    name_order: 'id',
+    _limit: 5,
+    _page: 0,
+    name_like: '',
+  },
+  pagination: {
+    _limit: 5,
+    _page: 0,
+    _totalRows: 15,
+  },
 };
 
 const productImageSlice = createSlice({
@@ -55,6 +67,14 @@ const productImageSlice = createSlice({
     },
     fetchDeleteProductImgSuccess(state) {
       state.isFetching = false;
+    },
+
+    // * SET FILTER NAME LIKE ==> Use Debounce effect redux saga
+    setFilterNameLike(state, action: PayloadAction<FilterPayload>) {},
+
+    // * SET FILTER CATEGORY
+    setFilter(state, action: PayloadAction<FilterPayload>) {
+      state.filters = action.payload;
     },
   },
 });

@@ -7,11 +7,9 @@ import { ProductImagesAttribute } from 'models';
 export interface ProductPageAddEditListImgProps {}
 
 export default function ProductPageAddEditListImg(props: ProductPageAddEditListImgProps) {
-  const { productId } = useParams();
+  const { productId, productImgId } = useParams();
 
   const isAddMode = !Boolean(productId);
-
-  console.log(isAddMode);
 
   const handleOnSubmit = (values: ProductImagesAttribute) => {
     return new Promise((resolve, reject) => {
@@ -39,7 +37,11 @@ export default function ProductPageAddEditListImg(props: ProductPageAddEditListI
       {/* {Boolean(productId) && !selected && <LinearProgress />}
   {(isAddMode || Boolean(selected)) && (
   )} */}
-      <ProductPageAddEditListImgForm initialValues={initialValues} onSubmit={handleOnSubmit} />
+      <ProductPageAddEditListImgForm
+        productId={(productId as unknown as number) || -1}
+        initialValues={initialValues}
+        onSubmit={handleOnSubmit}
+      />
     </FormLayout>
   );
 }

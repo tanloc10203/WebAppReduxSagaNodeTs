@@ -8,53 +8,50 @@ import {
   Typography,
 } from '@mui/material';
 import { SearchNotFound } from 'components/Common';
-import { CategoryAttribute, FilterPayload, HeadLabelState, PaginationParams } from 'models';
+import { FilterPayload, HeadLabelState, PaginationParams } from 'models';
 // material
 import { Card, Table, TableContainer } from '@mui/material';
-import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { ScrollBar } from 'components/Common';
-import { categoryActions, categorySelector } from 'features/category/categorySlice';
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import {
-  CategoryListHead,
-  CategoryListToolbar,
-  CategoryMoreMenu,
-} from 'sections/@dashboard/category';
+import { CategoryListToolbar, CategoryMoreMenu } from 'sections/@dashboard/category';
 import { getComparator, stableSort } from 'utils';
+import TableHeadCustom from './TableHeadCustom';
 
-export interface CategoryTablePaginationProps {}
+interface T {
+  [key: string]: any;
+}
 
-const TABLE_HEAD: Array<HeadLabelState> = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'slug', label: 'Slug', alignRight: false },
-  { id: 'id', label: 'CatID', alignRight: false },
-  { id: '' },
-];
+export interface TablePaginationCustomProps {
+  tableHead: Array<HeadLabelState>;
+  data: Array<T>;
 
-export function CategoryTablePagination(props: CategoryTablePaginationProps) {
-  const { data, filters, pagination } = useAppSelector(categorySelector);
+  pagination: PaginationParams;
+  filters: FilterPayload;
 
-  const { _order, name_order, name_like } = filters as FilterPayload;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof any) => void;
+  onChangePage: (event: unknown, newPage: number) => void;
 
-  const { _page, _limit, _totalRows } = pagination as PaginationParams;
+  onChangeRowsPerPage: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFilterByName: (event: ChangeEvent<HTMLInputElement>) => void;
+}
 
-  const dispatch = useAppDispatch();
+export default function TablePaginationCustom(props: TablePaginationCustomProps) {
+  const {
+    tableHead,
+    data,
+    pagination,
+    filters,
+    onChangePage,
+    onChangeRowsPerPage,
+    onRequestSort,
+    onFilterByName,
+  } = props;
+
+  const { _order, name_order, name_like } = filters;
+
+  const { _page, _limit, _totalRows } = pagination;
 
   const [selected, setSelected] = useState<readonly string[]>([]);
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof CategoryAttribute
-  ) => {
-    const isAsc = name_order === property && _order === 'ASC';
-    dispatch(
-      categoryActions.setFilterCategory({
-        ...filters,
-        _order: isAsc ? 'DESC' : 'ASC',
-        name_order: property,
-      } as FilterPayload)
-    );
-  };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -85,37 +82,13 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    dispatch(categoryActions.setFilterCategory({ ...filters, _page: newPage } as FilterPayload));
-  };
+  const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      categoryActions.setFilterCategory({
-        ...filters,
-        _page: 0,
-        _limit: parseInt(event.target.value, 10),
-      })
-    );
-  };
-
-  const handleFilterByName = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(
-      categoryActions.setFilterNameLike({
-        ...filters,
-        name_like: event.target.value,
-        _page: 0,
-      } as FilterPayload)
-    );
-  };
+  const emptyRows = _page > 0 ? Math.max(0, (1 + _page) * _limit - _totalRows) : 0;
 
   const handleDelete = (event: MouseEvent<unknown>) => {
     console.log('check delete: ', event.currentTarget);
   };
-
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
-
-  const emptyRows = _page > 0 ? Math.max(0, (1 + _page) * _limit - _totalRows) : 0;
 
   const rows = stableSort(
     data as unknown as readonly { [x: string]: string | number }[],
@@ -129,20 +102,20 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
       <CategoryListToolbar
         numSelected={selected.length}
         filterName={name_like as string}
-        onFilterName={handleFilterByName}
+        onFilterName={onFilterByName}
         onDelete={handleDelete}
       />
 
       <ScrollBar>
         <TableContainer sx={{ minWidth: 800 }}>
           <Table>
-            <CategoryListHead
-              headLabel={TABLE_HEAD}
+            <TableHeadCustom
+              headLabel={tableHead}
               numSelected={selected.length}
               order={_order?.toLowerCase() as 'asc' | 'desc'}
               orderBy={name_order}
               onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
+              onRequestSort={onRequestSort}
               rowCount={data.length}
             />
             <TableBody>
@@ -211,8 +184,8 @@ export function CategoryTablePagination(props: CategoryTablePaginationProps) {
         count={_totalRows}
         rowsPerPage={_limit}
         page={_page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
       />
     </Card>
   );
