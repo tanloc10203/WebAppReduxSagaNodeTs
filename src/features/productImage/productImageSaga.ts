@@ -56,7 +56,7 @@ function* fetchGet({ payload }: PayloadAction<number>) {
 }
 
 function* watchFetchGet() {
-  yield takeLatest(productImgActions.fetchCreateProductImgStart.type, fetchGet);
+  yield takeLatest(productImgActions.fetchProductImgStart.type, fetchGet);
 }
 
 // * UPDATE
@@ -79,7 +79,7 @@ function* fetchUpdate({ payload }: PayloadAction<ProductImagesAttribute>) {
 }
 
 function* watchFetchUpdate() {
-  yield takeLatest(productImgActions.fetchCreateProductImgStart.type, fetchUpdate);
+  yield takeLatest(productImgActions.fetchUpdateProductImgStart.type, fetchUpdate);
 }
 
 // * DELETE
@@ -102,7 +102,7 @@ function* fetchDelete({ payload }: PayloadAction<number>) {
 }
 
 function* watchFetchDelete() {
-  yield takeLatest(productImgActions.fetchCreateProductImgStart.type, fetchDelete);
+  yield takeLatest(productImgActions.fetchDeleteProductImgStart.type, fetchDelete);
 }
 
 export default function* productImageSaga() {

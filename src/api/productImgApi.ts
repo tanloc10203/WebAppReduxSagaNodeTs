@@ -14,7 +14,7 @@ const productImgApi = {
   },
 
   getAll(productId: number): Promise<ListResponse<ProductImagesAttribute>> {
-    return axiosClient.get(productImgApi.name + `/_productId=${productId}`);
+    return axiosClient.get(productImgApi.name + `?productId=${productId}`);
   },
 
   getById(productImgId: number): Promise<ListResponse<ProductImagesAttribute>> {

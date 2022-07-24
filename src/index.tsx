@@ -39,7 +39,7 @@ const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
+  <>
     <HelmetProvider>
       <Provider store={store}>
         <HistoryRouter history={history}>
@@ -66,7 +66,7 @@ root.render(
         </HistoryRouter>
       </Provider>
     </HelmetProvider>
-  </React.StrictMode>
+  </>
 );
 
 registerServiceWorker(toast);

@@ -14,8 +14,6 @@ const ProgressImageItem = ({ file, onGetUrl }: ProgressImageItemProps) => {
   const [progress, setProgress] = useState(0);
   const [imageURL, setImageURL] = useState('');
 
-  console.log('check 1', { onGetUrl, file });
-
   useEffect(() => {
     if (!file) return;
 

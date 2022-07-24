@@ -1,38 +1,43 @@
 import { CircularProgress } from '@material-ui/core';
-import { Box, Button, Grid, ImageList } from '@mui/material';
+import { Box, Button, Grid, ImageList, ImageListItem } from '@mui/material';
+import { PayloadFetchCreateProductImg } from 'api/productImgApi';
 import { useAppSelector } from 'app/hooks';
+import { LazyLoadingImg } from 'components/Common';
 import { UploadFileMultiple } from 'components/FormFields';
 import { productImageSelectors } from 'features/productImage/productImageSlice';
 import { ProductImagesAttribute } from 'models';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ProgressImageItem from 'sections/@dashboard/product-image/ProgressImageItem';
 
 export interface ProductPageAddEditListImgFormProps {
   initialValues?: Omit<ProductImagesAttribute, 'productId'>;
   productId: number;
-  onSubmit?: (values: ProductImagesAttribute) => Promise<unknown>;
+  onSubmit?: (values: PayloadFetchCreateProductImg) => Promise<unknown>;
 }
 
 const log = console.log;
 
 function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps) {
   const { onSubmit, productId } = props;
+
   const { handleSubmit } = useForm<ProductImagesAttribute>({});
 
   const { isFetching } = useAppSelector(productImageSelectors);
 
-  const [files, setFiles] = useState<Array<File>>(() => {
-    log('Initializers run twice');
-    return [];
-  });
+  const [files, setFiles] = useState<Array<File>>([]);
 
   const [data, setData] = useState<Array<ProductImagesAttribute>>([]);
 
   const handleOnSubmit = async (values: ProductImagesAttribute) => {
-    if (!onSubmit) return;
+    if (!onSubmit || !Boolean(productId) || !Boolean(data.length)) return;
 
-    await onSubmit?.(values);
+    const payload: PayloadFetchCreateProductImg = {
+      productId,
+      data,
+    };
+
+    await onSubmit?.(payload);
   };
 
   const loading = isFetching ? true : false;
@@ -50,17 +55,12 @@ function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps
       }
     });
 
-    setFiles((pre) => {
-      log('Updaters run twice');
-      return [...pre, ...uploadFiles];
-    });
+    setFiles(uploadFiles);
   };
 
   const handleGetFileUrl = (values: string) => {
-    console.log('check data', values);
+    setData((pre) => [...pre, { productId, urlImg: values }]);
   };
-
-  log(files);
 
   return (
     <Box
@@ -72,12 +72,20 @@ function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps
       <Grid container spacing={2}>
         <Grid item>
           <UploadFileMultiple onChange={handleChangeFiles} />
-          <ImageList rowHeight={200} cols={4}>
+          <ImageList rowHeight={200} cols={4} sx={{ mt: 2 }}>
             {Boolean(files) &&
               (files as Array<File>)?.length > 0 &&
               (files as Array<File>).map((file, index) => (
                 <ProgressImageItem file={file} key={index} onGetUrl={handleGetFileUrl} />
               ))}
+            {Boolean(data.length) &&
+              data.map((p, i) => {
+                return (
+                  <ImageListItem key={i} cols={1} rows={1}>
+                    <LazyLoadingImg url={p.urlImg} sx={{ position: 'unset !important' }} />
+                  </ImageListItem>
+                );
+              })}
           </ImageList>
         </Grid>
       </Grid>

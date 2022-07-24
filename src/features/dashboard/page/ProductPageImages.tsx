@@ -1,8 +1,9 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Button, Container, LinearProgress, Stack, Typography } from '@mui/material';
-import { useAppSelector } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Iconify, Page } from 'components/Common';
-import { productImageSelectors } from 'features/productImage/productImageSlice';
+import { productImageSelectors, productImgActions } from 'features/productImage/productImageSlice';
+import { useEffect } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { ProductImageTable } from 'sections/@dashboard/product-image';
 
@@ -12,8 +13,15 @@ export default function ProductPageImages(props: ProductPageImagesProps) {
   const { productId } = useParams();
   const { data, isFetching } = useAppSelector(productImageSelectors);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   console.log(productId);
+
+  useEffect(() => {
+    if (!Boolean(productId)) return;
+
+    dispatch(productImgActions.fetchProductImgStart(productId as unknown as number));
+  }, [productId, dispatch]);
 
   return (
     <Page title="Category">

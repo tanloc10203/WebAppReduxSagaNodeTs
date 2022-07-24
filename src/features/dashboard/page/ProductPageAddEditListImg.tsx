@@ -1,21 +1,28 @@
-import { FormLayout } from 'components/FormFields';
-import { useParams } from 'react-router-dom';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import { ProductPageAddEditListImgForm } from '../components/forms';
+import { PayloadFetchCreateProductImg } from 'api/productImgApi';
+import { useAppDispatch } from 'app/hooks';
+import { FormLayout } from 'components/FormFields';
+import { productImgActions } from 'features/productImage/productImageSlice';
 import { ProductImagesAttribute } from 'models';
+import { useParams } from 'react-router-dom';
+import { ProductPageAddEditListImgForm } from '../components/forms';
 
 export interface ProductPageAddEditListImgProps {}
 
 export default function ProductPageAddEditListImg(props: ProductPageAddEditListImgProps) {
   const { productId, productImgId } = useParams();
 
+  const dispatch = useAppDispatch();
+
   const isAddMode = !Boolean(productId);
 
-  const handleOnSubmit = (values: ProductImagesAttribute) => {
+  const handleOnSubmit = (values: PayloadFetchCreateProductImg) => {
     return new Promise((resolve, reject) => {
       try {
         setTimeout(() => {
           console.log(values);
+
+          dispatch(productImgActions.fetchCreateProductImgStart(values));
           resolve(true);
         }, 2000);
       } catch (error) {
