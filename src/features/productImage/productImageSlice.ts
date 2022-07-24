@@ -62,7 +62,7 @@ const productImageSlice = createSlice({
     },
 
     // DELETE
-    fetchDeleteProductImgStart(state, actions: PayloadAction<number>) {
+    fetchDeleteProductImgStart(state, actions: PayloadAction<ProductImagesAttribute>) {
       state.isFetching = true;
     },
     fetchDeleteProductImgSuccess(state) {

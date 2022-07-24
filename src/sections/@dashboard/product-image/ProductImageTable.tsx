@@ -56,7 +56,7 @@ export default function ProductImageTable({ data }: ProductImageTableState) {
                   </Typography>
                 </TableCell>
                 <TableCell align="right">
-                  <ProductImageMoreMenu productImgId={p.id as number} />
+                  <ProductImageMoreMenu productImgId={p.id as number} data={p} />
                 </TableCell>
               </TableRow>
             ))}

@@ -15,8 +15,6 @@ export default function ProductPageImages(props: ProductPageImagesProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  console.log(productId);
-
   useEffect(() => {
     if (!Boolean(productId)) return;
 

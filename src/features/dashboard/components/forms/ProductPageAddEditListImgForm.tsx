@@ -11,12 +11,9 @@ import { useForm } from 'react-hook-form';
 import ProgressImageItem from 'sections/@dashboard/product-image/ProgressImageItem';
 
 export interface ProductPageAddEditListImgFormProps {
-  initialValues?: Omit<ProductImagesAttribute, 'productId'>;
   productId: number;
   onSubmit?: (values: PayloadFetchCreateProductImg) => Promise<unknown>;
 }
-
-const log = console.log;
 
 function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps) {
   const { onSubmit, productId } = props;
@@ -43,7 +40,6 @@ function ProductPageAddEditListImgForm(props: ProductPageAddEditListImgFormProps
   const loading = isFetching ? true : false;
 
   const handleChangeFiles = (filesInput: Array<File>) => {
-    log('Event handlers don’t need to be pure, so they run only once');
     if (!Boolean(filesInput)) return;
 
     const uploadFiles = [...files];

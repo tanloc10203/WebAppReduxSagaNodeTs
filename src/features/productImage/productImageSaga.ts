@@ -62,9 +62,14 @@ function* watchFetchGet() {
 // * UPDATE
 function* fetchUpdate({ payload }: PayloadAction<ProductImagesAttribute>) {
   try {
-    const response: ListResponseCreate = yield call(productImgApi.update, payload);
+    const response: ListResponse<ProductImagesAttribute> = yield call(
+      productImgApi.update,
+      payload
+    );
 
     if (!response.error) {
+      toast.success('Cập nhật ảnh thành công');
+      history.push(`/dashboard/products/images/${payload.productId}`);
       yield put(productImgActions.fetchUpdateProductImgSuccess());
     }
   } catch (error) {
@@ -83,12 +88,14 @@ function* watchFetchUpdate() {
 }
 
 // * DELETE
-function* fetchDelete({ payload }: PayloadAction<number>) {
+function* fetchDelete({ payload }: PayloadAction<ProductImagesAttribute>) {
   try {
-    const response: ListResponseCreate = yield call(productImgApi.delete, payload);
+    const response: ListResponseCreate = yield call(productImgApi.delete, payload.id as number);
 
     if (!response.error) {
       yield put(productImgActions.fetchDeleteProductImgSuccess());
+      toast.success(`Bạn đã xóa thành công`);
+      yield put(productImgActions.fetchProductImgStart(payload.productId));
     }
   } catch (error) {
     if (error instanceof AxiosError) {

@@ -1,7 +1,11 @@
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useAppDispatch } from 'app/hooks';
 import { Iconify } from 'components/Common';
+import { productImgActions } from 'features/productImage/productImageSlice';
+import { ProductImagesAttribute } from 'models';
 import { ElementType, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import AlertDialogClose from './AlertDialogClose';
 
 export interface MenuItemState {
   path?: string;
@@ -13,11 +17,14 @@ export interface MenuItemState {
 
 export interface ProductImageMoreMenuProps {
   productImgId: number;
+  data: ProductImagesAttribute;
 }
 
-export function ProductImageMoreMenu({ productImgId }: ProductImageMoreMenuProps) {
+export function ProductImageMoreMenu({ productImgId, data }: ProductImageMoreMenuProps) {
   const ref = useRef<null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const menuItems: Array<MenuItemState> = [
     {
@@ -34,11 +41,25 @@ export function ProductImageMoreMenu({ productImgId }: ProductImageMoreMenuProps
   ];
 
   function handleChange() {
-    console.log('check click');
+    setOpen(true);
   }
+
+  const handleCloseData = () => {
+    if (!data) return;
+    setOpen(false);
+    dispatch(productImgActions.fetchDeleteProductImgStart(data));
+  };
 
   return (
     <>
+      <AlertDialogClose
+        open={open}
+        dataClose={data}
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        onCloseData={handleCloseData}
+      />
+
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
         <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
       </IconButton>
