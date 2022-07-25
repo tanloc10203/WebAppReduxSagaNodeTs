@@ -1,4 +1,4 @@
-import { CategoryAttribute, ProductPriceAttribute } from 'models';
+import { CategoryAttribute, ProductPriceAttribute, ProductImagesAttribute } from 'models';
 
 export type KeyStatusProduct = 'process' | 'hide' | 'show';
 
@@ -25,6 +25,7 @@ export interface ProductAttribute {
 
   description?: string;
   productDetail?: string;
+  images?: Array<ProductImagesAttribute>;
 
   createdAt?: string | Date;
   updatedAt?: string | Date;

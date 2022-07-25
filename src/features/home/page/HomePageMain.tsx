@@ -2,7 +2,6 @@ import { Box, Divider } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { Page } from 'components/Common';
 import { categoryActions, categorySelector } from 'features/category/categorySlice';
-import { productActions, productSelector } from 'features/product/productSlice';
 import { ProductAttribute } from 'models';
 import { memo, useEffect } from 'react';
 import { CatHead } from 'sections/@home/cat';
@@ -17,17 +16,13 @@ import {
   TopCatOfMonth,
 } from '../components';
 
-export interface HomePageMainProps {}
-
-function HomePageMain(props: HomePageMainProps) {
-  const { paramGetRandom } = useAppSelector(productSelector);
+function HomePageMain() {
   const { dataProduct, isFetching } = useAppSelector(categorySelector);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(productActions.fetchRandomProductStart(paramGetRandom));
     dispatch(categoryActions.fetchCatProductStart());
-  }, [dispatch, paramGetRandom]);
+  }, [dispatch]);
 
   return (
     <Page title="Trang chủ">
@@ -37,7 +32,6 @@ function HomePageMain(props: HomePageMainProps) {
 
       <BannerProduct />
 
-      {isFetching && <LoadingCat />}
       <DealOfDay />
 
       <TopCatOfMonth />

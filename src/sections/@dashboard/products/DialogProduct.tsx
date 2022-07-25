@@ -128,9 +128,7 @@ export default function DialogProduct(props: DialogProductProps) {
               </CardActions>
               <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                  <Typography paragraph>
-                    <div dangerouslySetInnerHTML={{ __html: product.productDetail as string }} />
-                  </Typography>
+                  <div dangerouslySetInnerHTML={{ __html: product.productDetail as string }} />
                 </CardContent>
               </Collapse>
             </DialogContentText>
