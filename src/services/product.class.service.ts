@@ -296,6 +296,13 @@ export class Product extends CommonController {
               exclude: ['createdAt', 'updatedAt'],
             },
           },
+          {
+            model: db.ProductImages,
+            as: 'images',
+            attributes: {
+              exclude: ['createdAt', 'updatedAt'],
+            },
+          },
         ],
       });
 

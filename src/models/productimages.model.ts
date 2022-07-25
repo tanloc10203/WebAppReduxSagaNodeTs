@@ -61,5 +61,5 @@ export function initProductImages(sequelize: Sequelize): void {
 }
 
 export function associateProductImages(): void {
-  ProductImages.belongsTo(Product, { targetKey: 'id', foreignKey: 'productId', as: 'images' });
+  ProductImages.belongsTo(Product, { targetKey: 'id', foreignKey: 'productId', as: 'product' });
 }

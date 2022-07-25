@@ -2,7 +2,9 @@
 
 import { Association, DataTypes, Model } from 'sequelize';
 import { Sequelize } from 'sequelize/types';
+import { ProductImage } from '../services';
 import { Category } from './category.model';
+import { ProductImages } from './productimages.model';
 import { ProductPrice } from './productprice.model';
 import { ProductTemp } from './producttemp.model';
 import { StatusProduct } from './statusproduct.model';
@@ -101,9 +103,9 @@ export function associateProduct(): void {
     foreignKey: 'productId',
     as: 'productTemps',
   });
-  Product.hasMany(ProductTemp, {
+  Product.hasMany(ProductImages, {
     sourceKey: 'id',
     foreignKey: 'productId',
-    as: 'productImages',
+    as: 'images',
   });
 }
